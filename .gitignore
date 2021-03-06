@@ -5,16 +5,10 @@ project.lock.json
 *.pyc
 nupkg/
 
-<<<<<<< HEAD
-=======
-# Visual Studio Code
-.vscode
-
->>>>>>> addf0dd (Changed project structure.)
 # Rider
 .idea
 
-# User-specific files
+# User-specific filesgit
 *.suo
 *.user
 *.userosscache
