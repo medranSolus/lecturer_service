@@ -37,6 +37,7 @@ namespace LecturerService.Controllers
 
         [HttpGet]
         //[Authorize]
+        [Route("{nameId}")]
         public Models.Lecturer Get(string nameId)
         {
             return new Models.Lecturer
