@@ -11,19 +11,20 @@ namespace LecturerService.Controllers
     [Route("[controller]")]
     public class LecturerController : ControllerBase
     {
+        readonly Data.LSContext dbCtx;
         readonly ILogger<LecturerController> logger;
 
-        public LecturerController(ILogger<LecturerController> logger)
+        public LecturerController(Data.LSContext database, ILogger<LecturerController> logger)
         {
+            dbCtx = database;
             this.logger = logger;
         }
 
         [HttpGet]
         //[Authorize]
-        public IEnumerable<Models.Lecturer> Get()
+        public IEnumerable<Data.Lecturer> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 1).Select(index => new Models.Lecturer
+            return Enumerable.Range(1, 1).Select(index => new Data.Lecturer
             {
                 ID = "TEST",
                 Name = "DateTime.Now.AddDays(index)",
@@ -38,29 +39,21 @@ namespace LecturerService.Controllers
         [HttpGet]
         //[Authorize]
         [Route("{nameId}")]
-        public Models.Lecturer Get(string nameId)
+        public Data.Lecturer Get(string nameId)
         {
-            return new Models.Lecturer
-            {
-                ID = nameId,
-                Name = "DateTime.Now.AddDays(index)",
-                Surname = "rng.Next(-20, 55)",
-                Password = "Summaries[rng.Next(Summaries.Length)]",
-                Mail = "dotsrom",
-                Phone = "42069"
-            };
+            return dbCtx.Lecturers.FirstOrDefault(lc => lc.ID == nameId);
         }
 
         [HttpPost]
         //[Authorize]
-        public IActionResult Post([FromBody]Models.Lecturer lecturer)
+        public IActionResult Post([FromBody]Data.Lecturer lecturer)
         {
             return Ok();
         }
 
         [HttpPut]
         //[Authorize]
-        public IActionResult Put([FromBody]Models.Lecturer lecturer)
+        public IActionResult Put([FromBody]Data.Lecturer lecturer)
         {
             return Ok();
         }

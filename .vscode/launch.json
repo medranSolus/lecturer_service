@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/backend/bin/Debug/netcoreapp3.1/LecturerService.dll",
+            "program": "${workspaceFolder}/backend/LecturerService/bin/Debug/netcoreapp3.1/LecturerService.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/backend",
+            "cwd": "${workspaceFolder}/backend/LecturerService",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {

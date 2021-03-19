@@ -27,21 +27,21 @@ namespace LecturerService.Controllers
         
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login([FromBody]Models.User login)
+        public IActionResult Login([FromBody]Data.User login)
         {
-            Models.User user = AuthenticateUser(login);
+            Data.User user = AuthenticateUser(login);
             if (user != null)
                 return Ok(new { token = GenerateJWT(user) });
             return Unauthorized();
         }
 
-        Models.User AuthenticateUser(Models.User login)
+        Data.User AuthenticateUser(Data.User login)
         {
-            Models.User user = null;
+            Data.User user = null;
             // TOD: DB etc
             if (login.Login == "TEST")
             {
-                user = new Models.User
+                user = new Data.User
                 {
                     Login = "TEST",
                     Password = "TESTO"
@@ -50,7 +50,7 @@ namespace LecturerService.Controllers
             return user;
         }
 
-        string GenerateJWT(Models.User user)
+        string GenerateJWT(Data.User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

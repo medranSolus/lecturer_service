@@ -1,7 +1,10 @@
-namespace LecturerService.Models
+using System.ComponentModel.DataAnnotations;
+
+namespace LecturerService.Data
 {
     public class Lecturer
     {
+        [Key]
         public string ID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }

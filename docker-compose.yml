@@ -1,23 +1,17 @@
-version: '3.4'  
-  
-services:  
-  productssqlserver:  
-    links:  
-      - sqlserverService  
-    image: ${DOCKER_REGISTRY-}productssqlserver  
-    build:  
-      context: .  
-      dockerfile: backend/Dockerfile  
-  
-  sqlserverService:  
-    image: microsoft/mssql-server-linux:2017-latest  
-    hostname: 'sqlserver'  
-    environment:  
-      ACCEPT_EULA: Y  
-      SA_PASSWORD: "OhYouTuchMaTralala12"  
-    volumes:  
-      - ./data/mssql:/var/opt/mssql3  
-    ports:  
-      - '1433:1433'  
-    expose:  
-      - 1433  
+version: "3.9"
+
+services:
+  lecturerService:
+    image: ${DOCKER_REGISTRY-}lecturer-service
+    build: backend/LecturerService
+    ports:
+      - "4200:80"
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    image: sqlserver
+    hostname: "sqlserver"
+    build: backend/SqlServer
+    expose:
+      - 1433

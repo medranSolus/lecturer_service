@@ -1,4 +1,4 @@
-namespace LecturerService.Models
+namespace LecturerService.Data
 {
     public class User
     {
