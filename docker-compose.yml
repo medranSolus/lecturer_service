@@ -1,17 +1,27 @@
 version: "3.9"
 
+networks:
+  database:
+    driver: bridge
+
 services:
-  lecturerService:
-    image: ${DOCKER_REGISTRY-}lecturer-service
+  lecturerservice:
     build: backend/LecturerService
     ports:
       - "4200:80"
-    depends_on:
-      - sqlserver
-
-  sqlserver:
-    image: sqlserver
-    hostname: "sqlserver"
-    build: backend/SqlServer
     expose:
       - 1433
+    depends_on:
+      - sqlserver
+    networks:
+      - database
+
+  sqlserver:
+    hostname: sqlserver
+    build: backend/SqlServer
+    ports:
+      - "1433:1433"
+    expose:
+      - 1433
+    networks:
+      - database

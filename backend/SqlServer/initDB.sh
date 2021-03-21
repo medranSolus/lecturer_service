@@ -5,6 +5,6 @@ sleep 90s
 
 # Run the setup script to create the DB and the schema in the DB
 echo Creating Database...
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P OhYouTuchMaTralala12 -d master -i creation_script.sql
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -d master -i creation_script.sql
 # Fill it with example data
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P OhYouTuchMaTralala12 -d master -i fill_db.sql
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" -d master -i fill_db.sql

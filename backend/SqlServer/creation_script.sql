@@ -1,4 +1,9 @@
-﻿CREATE TABLE [Lecturers] (
+﻿EXEC sys.sp_configure N'remote access', N'1'
+GO
+RECONFIGURE WITH OVERRIDE
+GO
+
+CREATE TABLE [Lecturers] (
     [ID] nvarchar(450) NOT NULL,
     [Name] nvarchar(max) NULL,
     [Surname] nvarchar(max) NULL,
