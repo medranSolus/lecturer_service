@@ -22,11 +22,15 @@ services:
     # 'ports' and 'networks' should be enabled
     # and SqlServer Connection string should contain at the beginning:
     # Server=sqlserver;
+    #
+    ##### DEV ONLY FIX #####
     network_mode: host
+    ##### PRODUCTION!! #####
     #ports:
     #  - "4200:80"
     #networks:
     # - database
+    ############################
 
   sqlserver:
     hostname: sqlserver
