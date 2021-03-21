@@ -7,14 +7,26 @@ networks:
 services:
   lecturerservice:
     build: backend/LecturerService
-    ports:
-      - "4200:80"
-    expose:
-      - 1433
     depends_on:
       - sqlserver
-    networks:
-      - database
+    ############################
+    #### Bridge network fix ####
+    # 
+    # If bridge network fails enable 'network_mode' 
+    # and comment out 'ports' and 'networks'.
+    # Also remove server entry in SqlServer ConnectionString in:
+    # backend/LecturerService/appsettings.json
+    #
+    # This is development ONLY fix,
+    # for production 'network_mode' should be commented out,
+    # 'ports' and 'networks' should be enabled
+    # and SqlServer Connection string should contain at the beginning:
+    # Server=sqlserver;
+    network_mode: host
+    #ports:
+    #  - "4200:80"
+    #networks:
+    # - database
 
   sqlserver:
     hostname: sqlserver
@@ -24,4 +36,4 @@ services:
     expose:
       - 1433
     networks:
-      - database
+     - database
