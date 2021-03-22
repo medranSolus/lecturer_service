@@ -36,7 +36,7 @@ namespace LecturerService
                 };
             });
             services.AddControllers();
-            services.AddDbContext<Data.LSContext>(options =>
+            services.AddDbContext<Model.LSContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
         }
 

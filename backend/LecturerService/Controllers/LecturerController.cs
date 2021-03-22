@@ -11,10 +11,10 @@ namespace LecturerService.Controllers
     [Route("[controller]")]
     public class LecturerController : ControllerBase
     {
-        readonly Data.LSContext dbCtx;
+        readonly Model.LSContext dbCtx;
         readonly ILogger<LecturerController> logger;
 
-        public LecturerController(Data.LSContext database, ILogger<LecturerController> logger)
+        public LecturerController(Model.LSContext database, ILogger<LecturerController> logger)
         {
             dbCtx = database;
             this.logger = logger;
@@ -22,7 +22,7 @@ namespace LecturerService.Controllers
 
         [HttpGet]
         //[Authorize]
-        public IEnumerable<Data.Lecturer> Get()
+        public IEnumerable<Model.Lecturer> Get()
         {
             return dbCtx.Lecturers.ToArray();
         }
@@ -30,15 +30,15 @@ namespace LecturerService.Controllers
         [HttpGet]
         //[Authorize]
         [Route("{nameId}")]
-        public Data.Lecturer Get(string nameId)
+        public Model.Lecturer Get(string nameId)
         {
-            return dbCtx.Lecturers.Find(new Data.Lecturer{ ID = nameId });
+            return dbCtx.Lecturers.Find(new Model.Lecturer{ ID = nameId });
         }
 
         [HttpPost]
         //[Authorize]
         [Route("{hash}")]
-        public IActionResult Post(string hash, [FromBody]Data.Lecturer lecturer)
+        public IActionResult Post(string hash, [FromBody]Model.Lecturer lecturer)
         {
             // TODO: Check if you have MASTER role or smth
             if (String.IsNullOrEmpty(hash))
@@ -46,7 +46,7 @@ namespace LecturerService.Controllers
             if (dbCtx.Lecturers.Find(lecturer) == null)
             {
                 dbCtx.Lecturers.Add(lecturer);
-                dbCtx.Passwords.Add(new Data.Password{ ID = lecturer.ID, Hash = hash });
+                dbCtx.Passwords.Add(new Model.Password{ ID = lecturer.ID, Hash = hash });
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
@@ -56,10 +56,10 @@ namespace LecturerService.Controllers
 
         [HttpPut]
         //[Authorize]
-        public IActionResult Put([FromBody]Data.Lecturer lecturer)
+        public IActionResult Put([FromBody]Model.Lecturer lecturer)
         {
             // TODO: Check if you have MASTER role or smth
-            Data.Lecturer lc = dbCtx.Lecturers.Find(lecturer);
+            Model.Lecturer lc = dbCtx.Lecturers.Find(lecturer);
             if (lc == null)
                 return NotFound();
             lc = lecturer;
@@ -74,7 +74,7 @@ namespace LecturerService.Controllers
         public IActionResult Put([FromBody]Data.Password password)
         {
             // TODO: Check if you have MASTER role or smth
-            Data.Password pass = dbCtx.Passwords.Find(password);
+            Model.Password pass = dbCtx.Passwords.Find(password);
             if (pass == null)
                 return NotFound();
             pass.Hash = password.Hash;
@@ -85,13 +85,17 @@ namespace LecturerService.Controllers
 
         [HttpDelete]
         //[Authorize]
+        [Route("{nameId}")]
         public IActionResult Delete(string nameId)
         {
             // TODO: Check if you have MASTER role or smth
-            Data.Lecturer lc = new Data.Lecturer{ ID = nameId };
+            Model.Lecturer lc = new Model.Lecturer{ ID = nameId };
             if (dbCtx.Lecturers.Find(lc) == null)
                 return NotFound();
             dbCtx.Lecturers.Remove(lc);
+            Model.Course cs = dbCtx.Courses.FirstOrDefault(c => c.LecturerID == nameId);
+            if (cs != null)
+                cs.LecturerID = null;
             dbCtx.SaveChanges();
             return Ok();
         }
