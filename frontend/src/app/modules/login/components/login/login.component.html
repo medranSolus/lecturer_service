@@ -1,0 +1,48 @@
+<div class="form-container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="form" class=form-item>
+        <div class="container">
+            <div class="row justify-content-center">
+                <mat-card class= "card">
+                    <mat-card-title class="text-center">
+                        <strong>Sign in</strong>
+                    </mat-card-title>
+                
+                    <!--Card content-->
+                    <mat-card-content class="d-flex flex-column fields">
+                
+                            <!-- Email -->
+                        <mat-form-field appearance="fill">
+                            <mat-label>E-mail</mat-label>
+                            <input matInput placeholder="E-mail" [formControl]="form.controls['email']" required>
+                            <mat-error *ngIf="form.controls['email']">{{getEmailErrorMessage()}}</mat-error>
+                        </mat-form-field>
+                
+                        <!-- Password -->
+                        <mat-form-field appearance="fill">
+                            <mat-label>Password</mat-label>
+                            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" minlength="6" maxlength="32" [formControl]="form.controls['password']" required>
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="form.controls['password'].invalid">{{getPasswordErrorMessage()}}</mat-error>
+                        </mat-form-field>
+                
+                        <div class="alert alert-danger" *ngIf="loginError">
+                            {{errorMessage}}
+                        </div>
+                        <div>
+                            <!-- Remember me -->
+                            <mat-checkbox [formControl]="form.controls['rememberMe']">Remember me</mat-checkbox>
+                        </div>
+                
+                        <!-- Sign in button -->
+                        <button type="submit" mat-raised-button>Sign in</button>
+                        
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>     
+    </form>
+    
+</div>
+<ngx-spinner></ngx-spinner>
