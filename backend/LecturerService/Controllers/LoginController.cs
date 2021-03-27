@@ -17,11 +17,13 @@ namespace LecturerService.Controllers
     public class LoginController : ControllerBase
     {
         readonly IConfiguration config;
+        readonly Model.LSContext dbCtx;
         readonly ILogger<LoginController> logger;
 
-        public LoginController(IConfiguration configuration, ILogger<LoginController> log)
+        public LoginController(IConfiguration configuration, Model.LSContext database, ILogger<LoginController> log)
         {
             config = configuration;
+            dbCtx = database;
             logger = log;
         }
         
@@ -29,25 +31,17 @@ namespace LecturerService.Controllers
         [HttpPost]
         public IActionResult Login([FromBody]Data.User login)
         {
-            Data.User user = AuthenticateUser(login);
-            if (user != null)
-                return Ok(new { token = GenerateJWT(user) });
+            if (AuthenticateUser(login))
+                return Ok(new { token = GenerateJWT(login) });
             return Unauthorized();
         }
 
-        Data.User AuthenticateUser(Data.User login)
+        bool AuthenticateUser(Data.User login)
         {
-            Data.User user = null;
-            // TOD: DB etc
-            if (login.Login == "TEST")
-            {
-                user = new Data.User
-                {
-                    Login = "TEST",
-                    Password = "TESTO"
-                };
-            }
-            return user;
+            Model.Password pass = dbCtx.Passwords.Find(new Model.Password{ ID = login.Login });
+            if (pass != null)
+                return pass.Pass == Data.Security.GetHash(login.Password);
+            return false;
         }
 
         string GenerateJWT(Data.User user)

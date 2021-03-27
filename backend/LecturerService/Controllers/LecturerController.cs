@@ -14,10 +14,10 @@ namespace LecturerService.Controllers
         readonly Model.LSContext dbCtx;
         readonly ILogger<LecturerController> logger;
 
-        public LecturerController(Model.LSContext database, ILogger<LecturerController> logger)
+        public LecturerController(Model.LSContext database, ILogger<LecturerController> log)
         {
             dbCtx = database;
-            this.logger = logger;
+            logger = log;
         }
 
         [HttpGet]
@@ -37,16 +37,16 @@ namespace LecturerService.Controllers
 
         [HttpPost]
         //[Authorize]
-        [Route("{hash}")]
-        public IActionResult Post(string hash, [FromBody]Model.Lecturer lecturer)
+        [Route("{pass}")]
+        public IActionResult Post(string pass, [FromBody]Model.Lecturer lecturer)
         {
             // TODO: Check if you have MASTER role or smth
-            if (String.IsNullOrEmpty(hash))
+            if (String.IsNullOrEmpty(pass))
                 return BadRequest();
             if (dbCtx.Lecturers.Find(lecturer) == null)
             {
                 dbCtx.Lecturers.Add(lecturer);
-                dbCtx.Passwords.Add(new Model.Password{ ID = lecturer.ID, Hash = hash });
+                dbCtx.Passwords.Add(new Model.Password{ ID = lecturer.ID, Pass = Data.Security.GetHash(pass) });
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
@@ -73,11 +73,13 @@ namespace LecturerService.Controllers
         [Route("pass")]
         public IActionResult Put([FromBody]Data.Password password)
         {
+            if (String.IsNullOrEmpty(password.Pass))
+                return BadRequest();
             // TODO: Check if you have MASTER role or smth
             Model.Password pass = dbCtx.Passwords.Find(password);
             if (pass == null)
                 return NotFound();
-            pass.Hash = password.Hash;
+            pass.Pass = Data.Security.GetHash(password.Pass);
             dbCtx.SaveChanges();
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();

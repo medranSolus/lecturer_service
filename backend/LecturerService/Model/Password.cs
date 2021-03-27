@@ -10,7 +10,7 @@ namespace LecturerService.Model
         public string ID { get; set; }
         public Lecturer Lecturer { get; set; }
 
-        [Required(ErrorMessage = "Password hash cannot be empty!")]
-        public string Hash { get; set; }
+        [Required(ErrorMessage = "Password cannot be empty!")]
+        public string Pass { get; set; }
     }
 }

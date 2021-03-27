@@ -14,10 +14,10 @@ namespace LecturerService.Controllers
         readonly Model.LSContext dbCtx;
         readonly ILogger<CourseController> logger;
 
-        public CourseController(Model.LSContext database, ILogger<CourseController> logger)
+        public CourseController(Model.LSContext database, ILogger<CourseController> log)
         {
             dbCtx = database;
-            this.logger = logger;
+            logger = log;
         }
 
         [HttpGet]
