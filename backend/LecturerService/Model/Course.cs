@@ -3,9 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LecturerService.Model
 {
-    // Bits 7-0: Day, bits 15-8: Month
-    using PackedDate = System.UInt16;
-
     public class Course
     {
         [Key]
@@ -15,11 +12,15 @@ namespace LecturerService.Model
         [Required(ErrorMessage = "Course name cannot be empty!")]
         public string Name { get; set; }
 
+        [ForeignKey("CourseType")]
         [Required(ErrorMessage = "Course type cannot be empty!")]
-        public Data.CourseType Type { get; set; }
+        public Data.CourseType TypeID { get; set; }
+        public EnumTab.CourseType CourseType { get; set; }
 
+        [ForeignKey("Lang")]
         [Required(ErrorMessage = "Must specify course language!")]
-        public Data.Lang Language { get; set; }
+        public Data.Lang LanguageTypeID { get; set; }
+        public EnumTab.Lang Lang { get; set; }
 
         [Required(ErrorMessage = "Must specify course ECTS!")]
         public byte Ects { get; set; }
@@ -32,28 +33,52 @@ namespace LecturerService.Model
 #endregion // Basic info
 
 #region Dates
+        [ForeignKey("Semester")]
         [Required(ErrorMessage = "Must specify semester of course!")]
-        public Data.Semester Semester { get; set; }
+        public Data.Semester SemesterTypeID { get; set; }
+        public EnumTab.Semester Semester { get; set; }
         
         [Required(ErrorMessage = "Must specify year of course!")]
         public uint Year { get; set; }
 
-        [Required(ErrorMessage = "Must specify week of course!")]
-        public Data.WeekType WeekType { get; set; }
+        [Required(ErrorMessage = "Starting month of course cannot be empty!")]
+        public byte StartMonth { get; set; }
 
-        [Required(ErrorMessage = "Start of course cannot be empty!")]
-        public PackedDate Start { get; set; }
+        [Required(ErrorMessage = "Starting day of course cannot be empty!")]
+        public byte StartDay { get; set; }
 
-        [Required(ErrorMessage = "End of course cannot be empty!")]
-        public PackedDate End { get; set; }
+        [Required(ErrorMessage = "Ending month of course cannot be empty!")]
+        public byte EndMonth { get; set; }
+
+        [Required(ErrorMessage = "Ending day of course cannot be empty!")]
+        public byte EndDay { get; set; }
 #endregion // Dates
 
 #nullable enable
         [ForeignKey("Lecturer")]
         public string? LecturerID { get; set; }
         public Lecturer? Lecturer { get; set; }
-        public string? CourseFlow { get; set; }
-        public string? Group { get; set; }
+        public string? CourseGroup { get; set; }
 #nullable disable
+
+        public Course() {}
+        public Course(Data.Course course)
+        {
+            ID = course.ID;
+            Name = course.Name;
+            TypeID = course.TypeID;
+            LanguageTypeID = course.LanguageTypeID;
+            Ects = course.Ects;
+            HoursUniversity = course.HoursUniversity;
+            HoursStudent = course.HoursStudent;
+            SemesterTypeID = course.SemesterTypeID;
+            Year = course.Year;
+            StartMonth = course.StartMonth;
+            StartDay = course.StartDay;
+            EndMonth = course.EndMonth;
+            EndDay = course.EndDay;
+            LecturerID = course.LecturerID;
+            CourseGroup = course.CourseGroup;
+        }
     }
 }

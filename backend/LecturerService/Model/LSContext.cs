@@ -5,6 +5,7 @@ namespace LecturerService.Model
     public class LSContext : DbContext
     {
         public DbSet<Course> Courses { get; set; }
+        public DbSet<Group> Groups { get; set; }
         public DbSet<Lecturer> Lecturers { get; set; }
         public DbSet<Password> Passwords { get; set; }
 

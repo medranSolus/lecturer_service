@@ -9,12 +9,12 @@ namespace LecturerService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CourseController : ControllerBase
+    public class GroupController : ControllerBase
     {
         readonly Model.LSContext dbCtx;
-        readonly ILogger<CourseController> logger;
+        readonly ILogger<GroupController> logger;
 
-        public CourseController(Model.LSContext database, ILogger<CourseController> log)
+        public GroupController(Model.LSContext database, ILogger<GroupController> log)
         {
             dbCtx = database;
             logger = log;
@@ -22,30 +22,32 @@ namespace LecturerService.Controllers
 
         [HttpGet]
         //[Authorize]
-        public IEnumerable<Data.CourseShort> Get()
+        public IEnumerable<Data.Group> Get()
         {
-            return dbCtx.Courses.Select(c => new Data.CourseShort(c)).ToArray();
+            return dbCtx.Groups.Select(g => new Data.Group(g)).ToArray();
         }
 
         [HttpGet]
         //[Authorize]
         [Route("{nameId}")]
-        public Data.Course Get(string nameId)
+        public Data.Group Get(string nameId)
         {
-            Model.Course cs = dbCtx.Courses.Find(nameId);
-            if (cs == null)
+            Model.Group gp = dbCtx.Groups.Find(nameId);
+            if (gp == null)
                 return null;
-            return new Data.Course(cs);
+            return new Data.Group(gp);
         }
 
         [HttpPost]
         //[Authorize]
-        public IActionResult Post([FromBody]Data.Course course)
+        public IActionResult Post([FromBody]Data.Group group)
         {
             // TODO: Check if you have MASTER role or smth
-            if (dbCtx.Courses.Find(course.ID) == null)
+            if (dbCtx.Groups.Find(group.ID) == null)
             {
-                dbCtx.Courses.Add(new Model.Course(course));
+                if (dbCtx.Courses.Find(group.CourseID) == null)
+                    return BadRequest();
+                dbCtx.Groups.Add(new Model.Group(group));
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
@@ -55,13 +57,13 @@ namespace LecturerService.Controllers
 
         [HttpPut]
         //[Authorize]
-        public IActionResult Put([FromBody]Data.Course course)
+        public IActionResult Put([FromBody]Data.Group group)
         {
             // TODO: Check if you have MASTER role or smth
-            Model.Course cs = dbCtx.Courses.Find(course.ID);
-            if (cs == null)
+            Model.Group gp = dbCtx.Groups.Find(group.ID);
+            if (gp == null)
                 return NotFound();
-            cs = new Model.Course(course);
+            gp = new Model.Group(group);
             dbCtx.SaveChanges();
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
@@ -73,9 +75,9 @@ namespace LecturerService.Controllers
         public IActionResult Delete(string nameId)
         {
             // TODO: Check if you have MASTER role or smth
-            if (dbCtx.Courses.Find(nameId) == null)
+            if (dbCtx.Groups.Find(nameId) == null)
                 return NotFound();
-            dbCtx.Courses.Remove(new Model.Course{ ID = nameId });
+            dbCtx.Groups.Remove(new Model.Group{ ID = nameId });
             dbCtx.SaveChanges();
             return Ok();
         }
