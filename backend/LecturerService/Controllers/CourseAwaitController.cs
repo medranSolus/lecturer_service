@@ -9,12 +9,12 @@ namespace LecturerService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CourseController : ControllerBase
+    public class CourseAwaitController : ControllerBase
     {
         readonly Model.LSContext dbCtx;
-        readonly ILogger<CourseController> logger;
+        readonly ILogger<CourseAwaitController> logger;
 
-        public CourseController(Model.LSContext database, ILogger<CourseController> log)
+        public CourseAwaitController(Model.LSContext database, ILogger<CourseAwaitController> log)
         {
             dbCtx = database;
             logger = log;
@@ -24,7 +24,7 @@ namespace LecturerService.Controllers
         //[Authorize]
         public IEnumerable<Data.CourseShort> Get()
         {
-            return dbCtx.Courses.Select(c => new Data.CourseShort(c)).ToArray();
+            return dbCtx.PendingCourses.Select(c => new Data.CourseShort(c)).ToArray();
         }
 
         [HttpGet]
@@ -32,7 +32,7 @@ namespace LecturerService.Controllers
         [Route("{nameId}")]
         public Data.Course Get(string nameId)
         {
-            Model.Course cs = dbCtx.Courses.Find(nameId);
+            Model.Course cs = dbCtx.PendingCourses.Find(nameId);
             if (cs == null)
                 return null;
             return new Data.Course(cs);
@@ -40,13 +40,32 @@ namespace LecturerService.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Post([FromBody]Data.Course course)
+        [Route("{nameId}")]
+        public IActionResult Post(string nameId)
         {
             if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
                 return Unauthorized();
-            if (dbCtx.Courses.Find(course.ID) == null)
+            Model.Course cs = dbCtx.PendingCourses.Find(nameId);
+            if (cs == null)
+                return BadRequest();
+            dbCtx.PendingCourses.Remove(cs);
+            dbCtx.Courses.Add(cs);
+            foreach (var gp in dbCtx.PendingGroups.Where(g => g.CourseID == cs.ID))
             {
-                dbCtx.Courses.Add(new Model.Course(course));
+                dbCtx.PendingGroups.Remove(gp);
+                dbCtx.Groups.Add(gp);
+            }
+            dbCtx.SaveChanges();
+            return Conflict();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Post([FromBody]Data.Course course)
+        {
+            if (dbCtx.PendingCourses.Find(course.ID) == null)
+            {
+                dbCtx.PendingCourses.Add(new Model.Course(course));
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
@@ -61,7 +80,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Course cs = dbCtx.Courses.Find(course.ID);
+            Model.Course cs = dbCtx.PendingCourses.Find(course.ID);
             if (cs == null)
                 return NotFound();
             else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
@@ -77,12 +96,15 @@ namespace LecturerService.Controllers
         [Route("{nameId}")]
         public IActionResult Delete(string nameId)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
                 return Unauthorized();
-            Model.Course cs = dbCtx.Courses.Find(nameId);
+            Model.Course cs = dbCtx.PendingCourses.Find(nameId);
             if (cs == null)
                 return NotFound();
-            dbCtx.Courses.Remove(cs);
+            else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
+                return Unauthorized();
+            dbCtx.PendingCourses.Remove(cs);
             dbCtx.SaveChanges();
             return Ok();
         }

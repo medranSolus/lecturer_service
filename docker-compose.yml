@@ -24,12 +24,12 @@ services:
     # Server=sqlserver;
     #
     ##### DEV ONLY FIX #####
-    #network_mode: host
+    network_mode: hostServer=sqlserver;
     ##### PRODUCTION!! #####
-    ports:
-      - "4200:80"
-    networks:
-     - database
+    #ports:
+    #  - "4200:80"
+    #networks:
+    # - database
     ############################
 
   sqlserver:

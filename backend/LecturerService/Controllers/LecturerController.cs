@@ -43,7 +43,8 @@ namespace LecturerService.Controllers
         [Route("{pass}")]
         public IActionResult Post(string pass, [FromBody]Data.Lecturer lecturer)
         {
-            // TODO: Check if you have MASTER role or smth
+            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+                return Unauthorized();
             if (String.IsNullOrEmpty(pass))
                 return BadRequest();
             if (dbCtx.Lecturers.Find(lecturer.ID) == null)
@@ -58,10 +59,12 @@ namespace LecturerService.Controllers
         }
 
         [HttpPut]
-        //[Authorize]
+        [Authorize]
         public IActionResult Put([FromBody]Data.Lecturer lecturer)
         {
-            // TODO: Check if you have MASTER role or smth
+            Model.Lecturer caller = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (caller == null || caller.ID != lecturer.ID)
+                return Unauthorized();
             Model.Lecturer lc = dbCtx.Lecturers.Find(lecturer.ID);
             if (lc == null)
                 return NotFound();
@@ -72,13 +75,15 @@ namespace LecturerService.Controllers
         }
 
         [HttpPut]
-        //[Authorize]
+        [Authorize]
         [Route("pass")]
         public IActionResult Put([FromBody]Data.Password password)
         {
+            Model.Lecturer caller = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (caller == null || caller.ID != password.ID)
+                return Unauthorized();
             if (String.IsNullOrEmpty(password.Pass))
                 return BadRequest();
-            // TODO: Check if you have MASTER role or smth
             Model.Password pass = dbCtx.Passwords.Find(password.ID);
             if (pass == null)
                 return NotFound();
@@ -89,16 +94,19 @@ namespace LecturerService.Controllers
         }
 
         [HttpDelete]
-        //[Authorize]
+        [Authorize]
         [Route("{nameId}")]
         public IActionResult Delete(string nameId)
         {
-            // TODO: Check if you have MASTER role or smth
-            if (dbCtx.Lecturers.Find(nameId) == null)
+            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+                return Unauthorized();
+            Model.Lecturer lc = dbCtx.Lecturers.Find(nameId);
+            if (lc == null)
                 return NotFound();
-            dbCtx.Lecturers.Remove(new Model.Lecturer{ ID = nameId });
-            Model.Course cs = dbCtx.Courses.FirstOrDefault(c => c.LecturerID == nameId);
-            if (cs != null)
+            dbCtx.Lecturers.Remove(lc);
+            foreach (var cs in dbCtx.Courses.Where(c => c.LecturerID == nameId))
+                cs.LecturerID = null;
+            foreach (var cs in dbCtx.PendingCourses.Where(c => c.LecturerID == nameId))
                 cs.LecturerID = null;
             dbCtx.SaveChanges();
             return Ok();

@@ -9,12 +9,12 @@ namespace LecturerService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class GroupController : ControllerBase
+    public class GroupAwaitController : ControllerBase
     {
         readonly Model.LSContext dbCtx;
-        readonly ILogger<GroupController> logger;
+        readonly ILogger<GroupAwaitController> logger;
 
-        public GroupController(Model.LSContext database, ILogger<GroupController> log)
+        public GroupAwaitController(Model.LSContext database, ILogger<GroupAwaitController> log)
         {
             dbCtx = database;
             logger = log;
@@ -24,7 +24,7 @@ namespace LecturerService.Controllers
         //[Authorize]
         public IEnumerable<Data.Group> Get()
         {
-            return dbCtx.Groups.Select(g => new Data.Group(g)).ToArray();
+            return dbCtx.PendingGroups.Select(g => new Data.Group(g)).ToArray();
         }
 
         [HttpGet]
@@ -32,7 +32,7 @@ namespace LecturerService.Controllers
         [Route("{nameId}")]
         public Data.Group Get(string nameId)
         {
-            Model.Group gp = dbCtx.Groups.Find(nameId);
+            Model.Group gp = dbCtx.PendingGroups.Find(nameId);
             if (gp == null)
                 return null;
             return new Data.Group(gp);
@@ -45,14 +45,14 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            if (dbCtx.Groups.Find(group.ID) == null)
+            if (dbCtx.PendingGroups.Find(group.ID) == null)
             {
                 Model.Course cs = dbCtx.Courses.Find(group.CourseID);
                 if (cs == null)
                     return BadRequest();
                 else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
                     return Unauthorized();
-                dbCtx.Groups.Add(new Model.Group(group));
+                dbCtx.PendingGroups.Add(new Model.Group(group));
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
@@ -67,7 +67,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Group gp = dbCtx.Groups.Find(group.ID);
+            Model.Group gp = dbCtx.PendingGroups.Find(group.ID);
             if (gp == null)
                 return NotFound();
             else if (lc.RoleTypeID != Data.Role.Admin && gp.Course.LecturerID != lc.ID)
@@ -85,10 +85,10 @@ namespace LecturerService.Controllers
         {
             if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
                 return Unauthorized();
-            Model.Group gp = dbCtx.Groups.Find(nameId);
+            Model.Group gp = dbCtx.PendingGroups.Find(nameId);
             if (gp == null)
                 return NotFound();
-            dbCtx.Groups.Remove(gp);
+            dbCtx.PendingGroups.Remove(gp);
             dbCtx.SaveChanges();
             return Ok();
         }
