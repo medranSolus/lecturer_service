@@ -55,7 +55,6 @@ GO
 CREATE TABLE [Course] (
     [ID] nvarchar(450) NOT NULL,
     [Name] nvarchar(max) NOT NULL,
-    [LecturerID] nvarchar(450) NULL,
     [TypeID] tinyint NOT NULL,
     [LanguageTypeID] tinyint NOT NULL,
     [Ects] tinyint NOT NULL,
@@ -67,6 +66,7 @@ CREATE TABLE [Course] (
     [StartDay] tinyint NOT NULL,
     [EndMonth] tinyint NOT NULL,
     [EndDay] tinyint NOT NULL,
+    [LecturerID] nvarchar(450) NULL,
     [CourseGroup] nvarchar(max) NULL,
     CONSTRAINT [PK_Course] PRIMARY KEY ([ID]),
     CONSTRAINT [FK_Course_CourseType_TypeID] FOREIGN KEY ([TypeID]) REFERENCES [CourseType] ([Type]) ON DELETE CASCADE,

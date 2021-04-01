@@ -9,7 +9,6 @@ namespace LecturerService.Data
 
 #region Basic info
         public string Name { get; set; }
-        public string LecturerID { get; set; }
         public Data.CourseType TypeID { get; set; }
         public Data.Lang LanguageTypeID { get; set; }
         public byte Ects { get; set; }
@@ -28,6 +27,7 @@ namespace LecturerService.Data
 #endregion // Dates
 
 #nullable enable
+        public string? LecturerID { get; set; }
         public string? CourseGroup { get; set; }
 #nullable disable
 
@@ -36,7 +36,6 @@ namespace LecturerService.Data
         {
             ID = course.ID;
             Name = course.Name;
-            LecturerID = course.LecturerID;
             TypeID = course.TypeID;
             LanguageTypeID = course.LanguageTypeID;
             Ects = course.Ects;
@@ -48,6 +47,7 @@ namespace LecturerService.Data
             StartDay = course.StartDay;
             EndMonth = course.EndMonth;
             EndDay = course.EndDay;
+            LecturerID = course.LecturerID;
             CourseGroup = course.CourseGroup;
         }
     }
