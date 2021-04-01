@@ -20,6 +20,7 @@ namespace LecturerService.Controllers
             logger = log;
         }
 
+#region GET
         [HttpGet]
         //[Authorize]
         public IEnumerable<Data.Lecturer> Get()
@@ -38,8 +39,19 @@ namespace LecturerService.Controllers
             return new Data.Lecturer(lc);
         }
 
-        [HttpPost]
+        [HttpGet]
         //[Authorize]
+        [Route("notify")]
+        public IEnumerable<Data.CourseMsg> GetNotifications()
+        {
+            if (Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+                return dbCtx.CoursesToCheck.Select(msg => new Data.CourseMsg(msg)).ToArray();
+            return null;
+        }
+#endregion // GET
+#region POST
+        [HttpPost]
+        [Authorize]
         [Route("{pass}")]
         public IActionResult Post(string pass, [FromBody]Data.Lecturer lecturer)
         {
@@ -57,7 +69,8 @@ namespace LecturerService.Controllers
             }
             return Conflict();
         }
-
+#endregion // POST
+#region PUT
         [HttpPut]
         [Authorize]
         public IActionResult Put([FromBody]Data.Lecturer lecturer)
@@ -92,6 +105,7 @@ namespace LecturerService.Controllers
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
+#endregion // PUT
 
         [HttpDelete]
         [Authorize]

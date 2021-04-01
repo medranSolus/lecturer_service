@@ -20,6 +20,7 @@ namespace LecturerService.Controllers
             logger = log;
         }
 
+#region GET
         [HttpGet]
         //[Authorize]
         public IEnumerable<Data.Group> Get()
@@ -37,7 +38,8 @@ namespace LecturerService.Controllers
                 return null;
             return new Data.Group(gp);
         }
-
+#endregion // GET
+#region POST
         [HttpPost]
         [Authorize]
         public IActionResult Post([FromBody]Data.Group group)
@@ -59,7 +61,8 @@ namespace LecturerService.Controllers
             }
             return Conflict();
         }
-
+#endregion // POST
+#region PUT
         [HttpPut]
         [Authorize]
         public IActionResult Put([FromBody]Data.Group group)
@@ -77,6 +80,7 @@ namespace LecturerService.Controllers
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
+#endregion // PUT
 
         [HttpDelete]
         [Authorize]

@@ -27,8 +27,8 @@ namespace LecturerService.Controllers
             logger = log;
         }
         
-        [AllowAnonymous]
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Login([FromBody]Data.User login)
         {
             if (AuthenticateUser(login))

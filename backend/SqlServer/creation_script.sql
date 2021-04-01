@@ -86,6 +86,15 @@ CREATE TABLE [Passwords] (
 GO
 
 
+CREATE TABLE [CoursesToCheck] (
+    [ID] bigint NOT NULL IDENTITY,
+    [CourseID] nvarchar(450) NOT NULL,
+    CONSTRAINT [PK_CoursesToCheck] PRIMARY KEY ([ID]),
+    CONSTRAINT [FK_CoursesToCheck_Course_CourseID] FOREIGN KEY ([CourseID]) REFERENCES [Course] ([ID]) ON DELETE CASCADE
+);
+GO
+
+
 CREATE TABLE [Group] (
     [ID] nvarchar(450) NOT NULL,
     [CourseID] nvarchar(450) NOT NULL,
@@ -119,6 +128,10 @@ GO
 
 
 CREATE INDEX [IX_Course_TypeID] ON [Course] ([TypeID]);
+GO
+
+
+CREATE INDEX [IX_CoursesToCheck_CourseID] ON [CoursesToCheck] ([CourseID]);
 GO
 
 

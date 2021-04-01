@@ -20,6 +20,7 @@ namespace LecturerService.Controllers
             logger = log;
         }
 
+#region GET
         [HttpGet]
         //[Authorize]
         public IEnumerable<Data.CourseShort> Get()
@@ -37,13 +38,35 @@ namespace LecturerService.Controllers
                 return null;
             return new Data.Course(cs);
         }
+#endregion // GET
+#region POST
+        [HttpPost]
+        [Authorize]
+        [Route("{nameId}")]
+        public IActionResult Post(string nameId)
+        {
+            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+                return Unauthorized();
+            Model.Course cs = dbCtx.PendingCourses.Find(nameId);
+            if (cs == null)
+                return BadRequest();
+            dbCtx.Courses.Add(cs);
+            foreach (var gp in dbCtx.PendingGroups.Where(g => g.CourseID == cs.ID))
+            {
+                dbCtx.PendingGroups.Remove(gp);
+                dbCtx.Groups.Add(gp);
+            }
+            dbCtx.PendingCourses.Remove(cs);
+            dbCtx.SaveChanges();
+            return Ok();
+        }
 
         [HttpPost]
         [Authorize]
         public IActionResult Post([FromBody]Data.Course course)
         {
             if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
-                return Unauthorized();
+                return RedirectToAction("Post", "CourseAwait", new { course = course });
             if (dbCtx.Courses.Find(course.ID) == null)
             {
                 dbCtx.Courses.Add(new Model.Course(course));
@@ -53,7 +76,8 @@ namespace LecturerService.Controllers
             }
             return Conflict();
         }
-
+#endregion // POST
+#region PUT
         [HttpPut]
         [Authorize]
         public IActionResult Put([FromBody]Data.Course course)
@@ -71,6 +95,7 @@ namespace LecturerService.Controllers
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
+#endregion // PUT
 
         [HttpDelete]
         [Authorize]

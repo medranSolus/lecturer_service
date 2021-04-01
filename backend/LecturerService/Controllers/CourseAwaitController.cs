@@ -20,6 +20,7 @@ namespace LecturerService.Controllers
             logger = log;
         }
 
+#region GET
         [HttpGet]
         //[Authorize]
         public IEnumerable<Data.CourseShort> Get()
@@ -37,26 +38,24 @@ namespace LecturerService.Controllers
                 return null;
             return new Data.Course(cs);
         }
-
+#endregion // GET
+#region POST
         [HttpPost]
         [Authorize]
         [Route("{nameId}")]
         public IActionResult Post(string nameId)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
                 return Unauthorized();
             Model.Course cs = dbCtx.PendingCourses.Find(nameId);
             if (cs == null)
-                return BadRequest();
-            dbCtx.PendingCourses.Remove(cs);
-            dbCtx.Courses.Add(cs);
-            foreach (var gp in dbCtx.PendingGroups.Where(g => g.CourseID == cs.ID))
-            {
-                dbCtx.PendingGroups.Remove(gp);
-                dbCtx.Groups.Add(gp);
-            }
+                return NotFound();
+            else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
+                return Unauthorized();
+            dbCtx.CoursesToCheck.Add(new Model.CourseMsg{ CourseID = cs.ID });
             dbCtx.SaveChanges();
-            return Conflict();
+            return Ok();
         }
 
         [HttpPost]
@@ -72,7 +71,8 @@ namespace LecturerService.Controllers
             }
             return Conflict();
         }
-
+#endregion // POST
+#region PUT
         [HttpPut]
         [Authorize]
         public IActionResult Put([FromBody]Data.Course course)
@@ -90,6 +90,7 @@ namespace LecturerService.Controllers
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
+#endregion // PUT
 
         [HttpDelete]
         [Authorize]
