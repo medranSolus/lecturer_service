@@ -30,16 +30,16 @@ namespace LecturerService.Controllers
 
         [HttpGet]
         //[Authorize]
-        [Route("{nameId}")]
-        public Data.Group Get(string nameId)
+        [Route("{groupId}")]
+        public Data.Group Get(string groupId)
         {
-            Model.Group gp = dbCtx.PendingGroups.Find(nameId);
+            Model.Group gp = dbCtx.PendingGroups.Find(groupId);
             if (gp == null)
                 return null;
             return new Data.Group(gp);
         }
 #endregion // GET
-#region POST
+
         [HttpPost]
         [Authorize]
         public IActionResult Post([FromBody]Data.Group group)
@@ -61,8 +61,7 @@ namespace LecturerService.Controllers
             }
             return Conflict();
         }
-#endregion // POST
-#region PUT
+
         [HttpPut]
         [Authorize]
         public IActionResult Put([FromBody]Data.Group group)
@@ -80,16 +79,15 @@ namespace LecturerService.Controllers
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
-#endregion // PUT
 
         [HttpDelete]
         [Authorize]
-        [Route("{nameId}")]
-        public IActionResult Delete(string nameId)
+        [Route("{groupId}")]
+        public IActionResult Delete(string groupId)
         {
             if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
                 return Unauthorized();
-            Model.Group gp = dbCtx.PendingGroups.Find(nameId);
+            Model.Group gp = dbCtx.PendingGroups.Find(groupId);
             if (gp == null)
                 return NotFound();
             dbCtx.PendingGroups.Remove(gp);

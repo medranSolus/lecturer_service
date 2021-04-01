@@ -12,6 +12,10 @@ namespace LecturerService.Model
         [Required(ErrorMessage = "Course name cannot be empty!")]
         public string Name { get; set; }
 
+        [ForeignKey("Lecturer")]
+        public string LecturerID { get; set; }
+        public Lecturer Lecturer { get; set; }
+
         [ForeignKey("CourseType")]
         [Required(ErrorMessage = "Course type cannot be empty!")]
         public Data.CourseType TypeID { get; set; }
@@ -55,9 +59,6 @@ namespace LecturerService.Model
 #endregion // Dates
 
 #nullable enable
-        [ForeignKey("Lecturer")]
-        public string? LecturerID { get; set; }
-        public Lecturer? Lecturer { get; set; }
         public string? CourseGroup { get; set; }
 #nullable disable
 
@@ -66,6 +67,7 @@ namespace LecturerService.Model
         {
             ID = course.ID;
             Name = course.Name;
+            LecturerID = course.LecturerID;
             TypeID = course.TypeID;
             LanguageTypeID = course.LanguageTypeID;
             Ects = course.Ects;
@@ -77,7 +79,6 @@ namespace LecturerService.Model
             StartDay = course.StartDay;
             EndMonth = course.EndMonth;
             EndDay = course.EndDay;
-            LecturerID = course.LecturerID;
             CourseGroup = course.CourseGroup;
         }
     }

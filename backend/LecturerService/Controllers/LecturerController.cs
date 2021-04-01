@@ -30,10 +30,10 @@ namespace LecturerService.Controllers
 
         [HttpGet]
         //[Authorize]
-        [Route("{nameId}")]
-        public Data.Lecturer Get(string nameId)
+        [Route("{lecturerId}")]
+        public Data.Lecturer Get(string lecturerId)
         {
-            Model.Lecturer lc = dbCtx.Lecturers.Find(nameId);
+            Model.Lecturer lc = dbCtx.Lecturers.Find(lecturerId);
             if (lc == null)
                 return null;
             return new Data.Lecturer(lc);
@@ -42,14 +42,25 @@ namespace LecturerService.Controllers
         [HttpGet]
         //[Authorize]
         [Route("notify")]
-        public IEnumerable<Data.CourseMsg> GetNotifications()
+        public IEnumerable<Data.CourseMsgInfo> GetNotifications()
         {
             if (Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
-                return dbCtx.CoursesToCheck.Select(msg => new Data.CourseMsg(msg)).ToArray();
+                return dbCtx.CoursesToCheck.Select(msg => new Data.CourseMsgInfo(msg)).ToArray();
+            return null;
+        }
+
+        [HttpGet]
+        //[Authorize]
+        [Route("notify/{lecturerId}")]
+        public IEnumerable<Data.GroupMsgInfo> GetNotifications(string lecturerId)
+        {
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc != null && lc.ID == lecturerId)
+                return dbCtx.GroupNotification.Where(msg => msg.LecturerID == lecturerId).Select(msg => new Data.GroupMsgInfo(msg)).ToArray();
             return null;
         }
 #endregion // GET
-#region POST
+
         [HttpPost]
         [Authorize]
         [Route("{pass}")]
@@ -69,7 +80,7 @@ namespace LecturerService.Controllers
             }
             return Conflict();
         }
-#endregion // POST
+
 #region PUT
         [HttpPut]
         [Authorize]
@@ -109,18 +120,18 @@ namespace LecturerService.Controllers
 
         [HttpDelete]
         [Authorize]
-        [Route("{nameId}")]
-        public IActionResult Delete(string nameId)
+        [Route("{lecturerId}")]
+        public IActionResult Delete(string lecturerId)
         {
             if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
                 return Unauthorized();
-            Model.Lecturer lc = dbCtx.Lecturers.Find(nameId);
+            Model.Lecturer lc = dbCtx.Lecturers.Find(lecturerId);
             if (lc == null)
                 return NotFound();
             dbCtx.Lecturers.Remove(lc);
-            foreach (var cs in dbCtx.Courses.Where(c => c.LecturerID == nameId))
+            foreach (var cs in dbCtx.Courses.Where(c => c.LecturerID == lecturerId))
                 cs.LecturerID = null;
-            foreach (var cs in dbCtx.PendingCourses.Where(c => c.LecturerID == nameId))
+            foreach (var cs in dbCtx.PendingCourses.Where(c => c.LecturerID == lecturerId))
                 cs.LecturerID = null;
             dbCtx.SaveChanges();
             return Ok();

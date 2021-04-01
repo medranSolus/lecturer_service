@@ -30,30 +30,31 @@ namespace LecturerService.Controllers
 
         [HttpGet]
         //[Authorize]
-        [Route("{nameId}")]
-        public Data.Course Get(string nameId)
+        [Route("{courseId}")]
+        public Data.Course Get(string courseId)
         {
-            Model.Course cs = dbCtx.PendingCourses.Find(nameId);
+            Model.Course cs = dbCtx.PendingCourses.Find(courseId);
             if (cs == null)
                 return null;
             return new Data.Course(cs);
         }
 #endregion // GET
+
 #region POST
         [HttpPost]
         [Authorize]
-        [Route("{nameId}")]
-        public IActionResult Post(string nameId)
+        [Route("{courseId}")]
+        public IActionResult Post(string courseId)
         {
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Course cs = dbCtx.PendingCourses.Find(nameId);
+            Model.Course cs = dbCtx.PendingCourses.Find(courseId);
             if (cs == null)
                 return NotFound();
             else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
                 return Unauthorized();
-            dbCtx.CoursesToCheck.Add(new Model.CourseMsg{ CourseID = cs.ID });
+            dbCtx.CoursesToCheck.Add(new Model.CourseMsg{ CourseID = courseId });
             dbCtx.SaveChanges();
             return Ok();
         }
@@ -62,8 +63,12 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Post([FromBody]Data.Course course)
         {
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
+                return Unauthorized();
             if (dbCtx.PendingCourses.Find(course.ID) == null)
             {
+                course.LecturerID = lc.ID;
                 dbCtx.PendingCourses.Add(new Model.Course(course));
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
@@ -72,7 +77,7 @@ namespace LecturerService.Controllers
             return Conflict();
         }
 #endregion // POST
-#region PUT
+
         [HttpPut]
         [Authorize]
         public IActionResult Put([FromBody]Data.Course course)
@@ -90,17 +95,16 @@ namespace LecturerService.Controllers
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
-#endregion // PUT
 
         [HttpDelete]
         [Authorize]
-        [Route("{nameId}")]
-        public IActionResult Delete(string nameId)
+        [Route("{courseId}")]
+        public IActionResult Delete(string courseId)
         {
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Course cs = dbCtx.PendingCourses.Find(nameId);
+            Model.Course cs = dbCtx.PendingCourses.Find(courseId);
             if (cs == null)
                 return NotFound();
             else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)

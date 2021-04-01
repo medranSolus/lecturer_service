@@ -55,6 +55,7 @@ GO
 CREATE TABLE [Course] (
     [ID] nvarchar(450) NOT NULL,
     [Name] nvarchar(max) NOT NULL,
+    [LecturerID] nvarchar(450) NULL,
     [TypeID] tinyint NOT NULL,
     [LanguageTypeID] tinyint NOT NULL,
     [Ects] tinyint NOT NULL,
@@ -66,7 +67,6 @@ CREATE TABLE [Course] (
     [StartDay] tinyint NOT NULL,
     [EndMonth] tinyint NOT NULL,
     [EndDay] tinyint NOT NULL,
-    [LecturerID] nvarchar(450) NULL,
     [CourseGroup] nvarchar(max) NULL,
     CONSTRAINT [PK_Course] PRIMARY KEY ([ID]),
     CONSTRAINT [FK_Course_CourseType_TypeID] FOREIGN KEY ([TypeID]) REFERENCES [CourseType] ([Type]) ON DELETE CASCADE,
@@ -115,6 +115,17 @@ CREATE TABLE [Group] (
 GO
 
 
+CREATE TABLE [GroupNotification] (
+    [ID] bigint NOT NULL IDENTITY,
+    [GroupID] nvarchar(450) NOT NULL,
+    [LecturerID] nvarchar(450) NOT NULL,
+    CONSTRAINT [PK_GroupNotification] PRIMARY KEY ([ID]),
+    CONSTRAINT [FK_GroupNotification_Group_GroupID] FOREIGN KEY ([GroupID]) REFERENCES [Group] ([ID]) ON DELETE CASCADE,
+    CONSTRAINT [FK_GroupNotification_Lecturers_LecturerID] FOREIGN KEY ([LecturerID]) REFERENCES [Lecturers] ([ID]) ON DELETE CASCADE
+);
+GO
+
+
 CREATE INDEX [IX_Course_LanguageTypeID] ON [Course] ([LanguageTypeID]);
 GO
 
@@ -144,6 +155,14 @@ GO
 
 
 CREATE INDEX [IX_Group_WeekTypeID] ON [Group] ([WeekTypeID]);
+GO
+
+
+CREATE INDEX [IX_GroupNotification_GroupID] ON [GroupNotification] ([GroupID]);
+GO
+
+
+CREATE INDEX [IX_GroupNotification_LecturerID] ON [GroupNotification] ([LecturerID]);
 GO
 
 

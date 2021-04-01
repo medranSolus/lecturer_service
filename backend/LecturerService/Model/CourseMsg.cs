@@ -9,8 +9,15 @@ namespace LecturerService.Model
         public long ID { get; set; }
 
         [ForeignKey("Course")]
-        [Required(ErrorMessage = "Must specify course of group!")]
+        [Required(ErrorMessage = "Must specify course!")]
         public string CourseID { get; set; }
         public Course Course { get; set; }
+
+        public CourseMsg() {}
+        public CourseMsg(Data.CourseMsg msg)
+        {
+            ID = msg.ID;
+            CourseID = msg.CourseID;
+        }
     }
 }
