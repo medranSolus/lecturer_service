@@ -1,0 +1,52 @@
+<div class="container courses-list">
+    <h2 class=mb-4>Lista prowadzących</h2>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="course1" placeholder="Tytuł">
+                        <label for="course1">Tytuł</label>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="course1" placeholder="Imię">
+                        <label for="course1">Imię</label>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="course2" placeholder="Nazwisko">
+                        <label for="course2">Nazwisko</label>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="course3" placeholder="Wydział">
+                        <label for="course3">E-mail</label>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="course3" placeholder="Katedra">
+                        <label for="course3">Nr. telefonu</label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody *ngIf="lecturers$ | async as lecturers">
+            <tr *ngFor="let lecturer of lecturers">
+                <td>{{lecturer.title}}</td>
+                <td>{{lecturer.name}}</td>
+                <td>{{lecturer.surname}}</td>
+                <td>{{lecturer.mail}}</td>
+                <td>{{lecturer.phone}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+  
+  
+  

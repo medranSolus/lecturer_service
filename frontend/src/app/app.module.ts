@@ -9,6 +9,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { NavbarComponent } from './modules/navbar/navbar.component';
 import { MatIconModule } from '@angular/material/icon';
+import { CoursesModule } from './modules/courses/courses.module';
+import { LecturersModule } from './modules/lecturers/lecturers.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,10 @@ import { MatIconModule } from '@angular/material/icon';
     BrowserAnimationsModule,
     HttpClientModule,
     LoginModule,
-    MatIconModule
+    MatIconModule,
+    CoursesModule,
+    LecturersModule,
+    ScheduleModule
   ],
   providers: [
     { 

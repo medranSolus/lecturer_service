@@ -6,26 +6,29 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { LocalStorageService } from './local-storage.service';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient,
-    private storageService: LocalStorageService,
-    private router: Router) { }
-
-  private configUrl = 'assets/config/config.json';
+  private baseURL = environment.baseURL;
   private jwtHelper = new JwtHelperService();
 
-  public login(form: FormGroup, URL: string): Observable<any> {
+  constructor(private http: HttpClient,
+              private storageService: LocalStorageService,
+              private router: Router) { 
+
+  }
+
+  public login(form: FormGroup): Observable<any> {
     const body = {
       "email": form.get('email').value,
       "password": form.get('password').value
     }
 
-    return this.http.post(URL + 'auth', body)
+    return this.http.post(this.baseURL + 'auth', body)
       .pipe(tap(
         res => {
           this.storageService.setUserToken(res.data.accessToken, form.get('rememberMe').value);
@@ -61,9 +64,4 @@ export class AuthService {
       return true;
     }
   }
-
-  public getConfig(): Observable<any>{
-    return this.http.get(this.configUrl);
-  }
-
 }

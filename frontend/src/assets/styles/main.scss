@@ -2,8 +2,12 @@ html, body {
 	height: 100%;
     font-family: 'Roboto', sans-serif;
     background: white;
-	min-width: 550px;
+	min-width: 1200px;
 	font-size: 1.1rem;
+}
+
+body {
+    padding-top: 70px;
 }
 
 a:hover,
@@ -18,14 +22,21 @@ a:focus {
 .navbar {
     left: 0;
     right: 0;
-	padding-left: 72px;
-	padding-right: 72px;
+    top: 0;
+    min-width: 1200px;
+	padding-left: 20px;
+	padding-right: 20px;
 	background: dimgray;
     height: 70px;
-    display: flex;
     align-items: center;
-    justify-content: flex-end;
     position: fixed;
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-links {
+    justify-self: center;
+
 }
 
 .navbar-item {
@@ -34,24 +45,24 @@ a:focus {
 }
 
 .item-left {
-    margin-right: auto;
+    margin-right: 0px;
     margin-left: 0px;
     //background-image: url(/assets/img/logo.png);
     background-size: contain;
     background-repeat: no-repeat;
     width: 125px;
     height: 56px;
-
+    left: 20px;
+    position: absolute;
 }
 
 .item-right {
-    margin-left: 100px;
-    margin-right: 0;
+    right: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: auto;
-    
+    position: absolute;
 }
 
 .user-item {
@@ -68,6 +79,7 @@ a:focus {
 
 a {
     color: white;
+    text-decoration: none;
 }
 
 .account {
@@ -85,7 +97,7 @@ a {
 .active-link, .link-item:hover , .account:hover + .link-item{
     margin-bottom: -4px;
     border-bottom: 4px solid;
-    border-color: #fc0254;
+    border-color: white;
     box-sizing: border-box;
     cursor: pointer;
 }
@@ -102,6 +114,10 @@ a {
     display: flex;
     align-items: center;
     width: 100%;
+}
+
+.login-box {
+    max-width: 450px;
 }
 
 .card {
@@ -136,4 +152,46 @@ button {
     align-items: center;
     font-size: 14px;
     font-weight: bold;
+}
+
+
+/* ******************* Courses *********************** */
+
+.courses-list {
+    margin-top: 50px;
+}
+
+.course-item {
+    margin-bottom: 30px;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+.courses-searchbox {
+    
+    width: auto;
+    padding: 0;
+}
+
+.form-floating>label {
+    padding: 0;
+}
+
+.form-floating>.form-control {
+    padding: 0;
+    height: auto;
+    width: auto;
+    border: none;
+}
+
+.form-floating>.form-control:focus {
+    padding-bottom: 0;
+    padding-top: 1rem;
+}
+
+.form-floating>.form-control:not(:placeholder-shown) {
+    padding-bottom: 0;
+    padding-top: 1rem;
 }

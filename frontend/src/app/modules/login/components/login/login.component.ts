@@ -65,20 +65,18 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if(this.form.valid) {
       this.spinner.show();
-      this.authService.getConfig().subscribe(config => {
-        this.authService.login(this.form, config.apiURL)
-          .subscribe(
-            response => {
-              this.loginError = false;
-              this.spinner.hide();
-              this.router.navigate(['tournaments']);
-            },
-            error => {
-              this.loginError = true;
-              this.getLoginErrorMessage(error.error);
-              this.spinner.hide();
-            })
-      })
+      this.authService.login(this.form)
+      .subscribe(
+        response => {
+          this.loginError = false;
+          this.spinner.hide();
+          this.router.navigate(['tournaments']);
+        },
+        error => {
+          this.loginError = true;
+          this.getLoginErrorMessage(error.error);
+          this.spinner.hide();
+        });
     }
   }
 }

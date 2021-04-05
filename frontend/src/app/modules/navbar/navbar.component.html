@@ -1,10 +1,12 @@
 <div class="navbar">
-    <a routerLink="/tournaments" class="navbar-item item-left"></a>
-    <a routerLink="/tournaments" class="navbar-item link-item" >Tournaments</a> 
-    <a routerLink="/teams" class="navbar-item link-item" >My teams</a> 
-    <a routerLink="/randomizer" class="navbar-item link-item" >Randomizer</a> 
+    <div class="navbar-item item-left"></div>
+    <div class="navbar-links">
+        <a routerLink="/schedule" class="navbar-item link-item" >Twój plan</a> 
+        <a routerLink="/courses" class="navbar-item link-item" >Lista kursów</a> 
+        <a routerLink="/lecturers" class="navbar-item link-item" >Lista prowadzących</a> 
+    </div> 
     <div class="navbar-item item-right">
-        <a routerLink="/account" class="user-item">
+        <a routerLink="/" class="user-item">
             <div class="account"><mat-icon >account_box</mat-icon> </div>
             <div class="link-item"> My account </div>
         </a> 
