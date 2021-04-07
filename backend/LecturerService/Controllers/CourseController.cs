@@ -23,24 +23,44 @@ namespace LecturerService.Controllers
 #region GET
         [HttpGet]
         //[Authorize]
-        public IEnumerable<Data.CourseShort> Get()
+        public IActionResult Get()
         {
-            return dbCtx.Courses.Select(c => new Data.CourseShort(c)).ToArray();
+            return Ok(dbCtx.Courses.Select(c => new Data.CourseShort(c)).ToArray());
         }
 
         [HttpGet]
         //[Authorize]
         [Route("{courseId}")]
-        public Data.Course Get(string courseId)
+        public IActionResult Get(string courseId)
         {
             Model.Course cs = dbCtx.Courses.Find(courseId);
             if (cs == null)
-                return null;
-            return new Data.Course(cs);
+                return NotFound();
+            return Ok(new Data.Course(cs));
         }
 #endregion // GET
 
 #region POST
+        [HttpPost]
+        [Authorize]
+        public IActionResult Post([FromBody]Data.Course course)
+        {
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
+                return Unauthorized();
+            if (lc.RoleTypeID != Data.Role.Admin)
+                return RedirectToAction("Post", "CourseAwait", new { course = course });
+            if (dbCtx.Courses.Find(course.ID) == null && dbCtx.PendingCourses.Find(course.ID) == null)
+            {
+                course.LecturerID = lc.ID;
+                dbCtx.Courses.Add(new Model.Course(course));
+                dbCtx.SaveChanges();
+                // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
+                return Ok();
+            }
+            return Conflict();
+        }
+
         [HttpPost]
         [Authorize]
         [Route("accept")]
@@ -50,7 +70,7 @@ namespace LecturerService.Controllers
                 return Unauthorized();
             Model.Course cs = dbCtx.PendingCourses.Find(msg.CourseID);
             if (cs == null)
-                return BadRequest();
+                return NotFound();
             dbCtx.Courses.Add(cs);
             foreach (var gp in dbCtx.PendingGroups.Where(g => g.CourseID == cs.ID))
             {
@@ -61,26 +81,6 @@ namespace LecturerService.Controllers
             dbCtx.CoursesToCheck.Remove(new Model.CourseMsg(msg));
             dbCtx.SaveChanges();
             return Ok();
-        }
-
-        [HttpPost]
-        [Authorize]
-        public IActionResult Post([FromBody]Data.Course course)
-        {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
-            if (lc == null)
-                return Unauthorized();
-            if (lc.RoleTypeID != Data.Role.Admin)
-                return RedirectToAction("Post", "CourseAwait", new { course = course });
-            if (dbCtx.Courses.Find(course.ID) == null)
-            {
-                course.LecturerID = lc.ID;
-                dbCtx.Courses.Add(new Model.Course(course));
-                dbCtx.SaveChanges();
-                // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
-                return Ok();
-            }
-            return Conflict();
         }
 #endregion // POST
 

@@ -23,57 +23,57 @@ namespace LecturerService.Controllers
 #region GET
         [HttpGet]
         //[Authorize]
-        public IEnumerable<Data.Lecturer> Get()
+        public IActionResult Get()
         {
-            return dbCtx.Lecturers.Select(l => new Data.Lecturer(l)).ToArray();
+            return Ok(dbCtx.Lecturers.Select(l => new Data.Lecturer(l)).ToArray());
         }
 
         [HttpGet]
         //[Authorize]
         [Route("{lecturerId}")]
-        public Data.Lecturer Get(string lecturerId)
+        public IActionResult Get(string lecturerId)
         {
             Model.Lecturer lc = dbCtx.Lecturers.Find(lecturerId);
             if (lc == null)
-                return null;
-            return new Data.Lecturer(lc);
+                return NotFound();
+            return Ok(new Data.Lecturer(lc));
         }
 
         [HttpGet]
         //[Authorize]
         [Route("notify")]
-        public IEnumerable<Data.CourseMsgInfo> GetNotifications()
+        public IActionResult GetNotifications()
         {
             if (Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
-                return dbCtx.CoursesToCheck.Select(msg => new Data.CourseMsgInfo(msg)).ToArray();
-            return null;
+                return Ok(dbCtx.CoursesToCheck.Select(msg => new Data.CourseMsgInfo(msg)).ToArray());
+            return Unauthorized();
         }
 
         [HttpGet]
         //[Authorize]
         [Route("notify/{lecturerId}")]
-        public IEnumerable<Data.GroupMsgInfo> GetNotifications(string lecturerId)
+        public IActionResult GetNotifications(string lecturerId)
         {
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc != null && lc.ID == lecturerId)
-                return dbCtx.GroupNotification.Where(msg => msg.LecturerID == lecturerId).Select(msg => new Data.GroupMsgInfo(msg)).ToArray();
-            return null;
+                return Ok(dbCtx.GroupNotification.Where(msg => msg.LecturerID == lecturerId).Select(msg => new Data.GroupMsgInfo(msg)).ToArray());
+            return Unauthorized();
         }
 #endregion // GET
 
         [HttpPost]
         [Authorize]
-        [Route("{pass}")]
-        public IActionResult Post(string pass, [FromBody]Data.Lecturer lecturer)
+        [Route("{password}")]
+        public IActionResult Post(string password, [FromBody]Data.Lecturer lecturer)
         {
             if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
                 return Unauthorized();
-            if (String.IsNullOrEmpty(pass))
+            if (String.IsNullOrEmpty(password))
                 return BadRequest();
             if (dbCtx.Lecturers.Find(lecturer.ID) == null)
             {
                 dbCtx.Lecturers.Add(new Model.Lecturer(lecturer));
-                dbCtx.Passwords.Add(new Model.Password{ ID = lecturer.ID, Pass = Data.Security.GetHash(pass) });
+                dbCtx.Passwords.Add(new Model.Password{ ID = lecturer.ID, Pass = Data.Security.GetHash(password) });
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
@@ -86,12 +86,9 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Put([FromBody]Data.Lecturer lecturer)
         {
-            Model.Lecturer caller = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
-            if (caller == null || caller.ID != lecturer.ID)
-                return Unauthorized();
-            Model.Lecturer lc = dbCtx.Lecturers.Find(lecturer.ID);
-            if (lc == null)
-                return NotFound();
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null || lc.ID != lecturer.ID)
+                Unauthorized();
             lc = new Model.Lecturer(lecturer);
             dbCtx.SaveChanges();
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
@@ -109,8 +106,6 @@ namespace LecturerService.Controllers
             if (String.IsNullOrEmpty(password.Pass))
                 return BadRequest();
             Model.Password pass = dbCtx.Passwords.Find(password.ID);
-            if (pass == null)
-                return NotFound();
             pass.Pass = Data.Security.GetHash(password.Pass);
             dbCtx.SaveChanges();
             // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)

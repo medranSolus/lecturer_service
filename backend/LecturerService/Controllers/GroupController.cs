@@ -23,42 +23,41 @@ namespace LecturerService.Controllers
 #region GET
         [HttpGet]
         //[Authorize]
-        public IEnumerable<Data.Group> Get()
+        public IActionResult Get()
         {
-            return dbCtx.Groups.Select(g => new Data.Group(g)).ToArray();
+            return Ok(dbCtx.Groups.Select(g => new Data.Group(g)).ToArray());
         }
 
         [HttpGet]
         //[Authorize]
         [Route("{groupId}")]
-        public Data.Group Get(string groupId)
+        public IActionResult Get(string groupId)
         {
             Model.Group gp = dbCtx.Groups.Find(groupId);
             if (gp == null)
-                return null;
-            return new Data.Group(gp);
+                return NotFound();
+            return Ok(new Data.Group(gp));
         }
 #endregion // GET
 
 #region POST
         [HttpPost]
         [Authorize]
-        [Route("{groupId}")]
-        public IActionResult Post(string groupId)
+        public IActionResult Post([FromBody]Data.Group group)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
-            if (lc == null)
+            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
                 return Unauthorized();
-            Model.Group gp = dbCtx.PendingGroups.Find(groupId);
-            if (gp == null)
+            if (dbCtx.Groups.Find(group.ID) == null && dbCtx.PendingGroups.Find(group.ID) == null)
             {
-                gp = dbCtx.Groups.Find(groupId);
-                if (gp == null)
+                Model.Course cs = dbCtx.Courses.Find(group.CourseID);
+                if (cs == null)
                     return BadRequest();
+                dbCtx.Groups.Add(new Model.Group(group));
+                dbCtx.SaveChanges();
+                // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
+                return Ok();
             }
-            dbCtx.GroupNotification.Add(new Model.GroupMsg{ GroupID = groupId, LecturerID = lc.ID });
-            dbCtx.SaveChanges();
-            return Ok();
+            return Conflict();
         }
 
         [HttpPost]
@@ -74,7 +73,7 @@ namespace LecturerService.Controllers
             {
                 gp = dbCtx.Groups.Find(msg.GroupID);
                 if (gp == null)
-                    return BadRequest();
+                    return NotFound();
             }
             if (gp.Course.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
                 return Unauthorized();
@@ -86,21 +85,22 @@ namespace LecturerService.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Post([FromBody]Data.Group group)
+        [Route("{groupId}")]
+        public IActionResult Post(string groupId)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
                 return Unauthorized();
-            if (dbCtx.Groups.Find(group.ID) == null)
+            Model.Group gp = dbCtx.PendingGroups.Find(groupId);
+            if (gp == null)
             {
-                Model.Course cs = dbCtx.Courses.Find(group.CourseID);
-                if (cs == null)
-                    return BadRequest();
-                dbCtx.Groups.Add(new Model.Group(group));
-                dbCtx.SaveChanges();
-                // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
-                return Ok();
+                gp = dbCtx.Groups.Find(groupId);
+                if (gp == null)
+                    return NotFound();
             }
-            return Conflict();
+            dbCtx.GroupNotification.Add(new Model.GroupMsg{ GroupID = groupId, LecturerID = lc.ID });
+            dbCtx.SaveChanges();
+            return Ok();
         }
 #endregion // POST
 

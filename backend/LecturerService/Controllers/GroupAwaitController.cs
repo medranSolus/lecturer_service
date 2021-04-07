@@ -23,20 +23,20 @@ namespace LecturerService.Controllers
 #region GET
         [HttpGet]
         //[Authorize]
-        public IEnumerable<Data.Group> Get()
+        public IActionResult Get()
         {
-            return dbCtx.PendingGroups.Select(g => new Data.Group(g)).ToArray();
+            return Ok(dbCtx.PendingGroups.Select(g => new Data.Group(g)).ToArray());
         }
 
         [HttpGet]
         //[Authorize]
         [Route("{groupId}")]
-        public Data.Group Get(string groupId)
+        public IActionResult Get(string groupId)
         {
             Model.Group gp = dbCtx.PendingGroups.Find(groupId);
             if (gp == null)
-                return null;
-            return new Data.Group(gp);
+                return NotFound();
+            return Ok(new Data.Group(gp));
         }
 #endregion // GET
 
@@ -47,7 +47,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            if (dbCtx.PendingGroups.Find(group.ID) == null)
+            if (dbCtx.PendingGroups.Find(group.ID) == null && dbCtx.Groups.Find(group.ID) == null)
             {
                 Model.Course cs = dbCtx.Courses.Find(group.CourseID);
                 if (cs == null)
@@ -85,11 +85,14 @@ namespace LecturerService.Controllers
         [Route("{groupId}")]
         public IActionResult Delete(string groupId)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
                 return Unauthorized();
             Model.Group gp = dbCtx.PendingGroups.Find(groupId);
             if (gp == null)
                 return NotFound();
+            else if (gp.Course.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
+                return Unauthorized();
             dbCtx.PendingGroups.Remove(gp);
             dbCtx.SaveChanges();
             return Ok();

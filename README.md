@@ -1,5 +1,7 @@
 # Lecturer Service
 
+Backed API reference [**here**](backend/API.md).
+
 ### Dependecies:
   - *docker-compose*
   - **backend:**

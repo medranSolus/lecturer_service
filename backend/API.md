@@ -1,0 +1,177 @@
+## Lecturer Service API reference
+
+**Listening port:** 4200
+
+Authentication method based on JWT passed in header named **Authorization: Bearer <token>**. 
+
+### GET
+  - *lecturer* - get all lecturers
+    - return:
+      - OK 200: [ Data.Lecturer ]
+  - *lecturer/LECTURER_ID* - get single lecturer
+    - return:
+      - OK 200: Data.Lecturer
+      - NotFound 404: LECTURER_ID not found
+  - *lecturer/notify* - get courses to approve (admin only)
+    - return:
+      - OK 200: [ Data.CourseMsgInfo ]
+      - Unauthorized 401: user not an admin
+  - *lecturer/notify/LECTURER_ID* - get requests to sign into lecturer course groups
+    - return:
+      - OK 200: [ Data.GroupMsgInfo ]
+      - Unauthorized 401: user ID and LECTURER_ID missmatched or user not found
+  - *course* - get all courses
+    - return:
+      - OK 200: [ Data.CourseShort ]
+  - *course/COURSE_ID* - get single course
+    - return:
+      - OK 200: Data.Course
+      - NotFound 404: COURSE_ID not found
+  - *courseawait* - get all pending courses
+    - return:
+      - OK 200: [ Data.CourseShort ]
+  - *courseawait/COURSE_ID* - get single pending course
+    - return:
+      - OK 200: Data.Course
+      - NotFound 404: COURSE_ID not found
+  - *group* - get all groups
+    - return:
+      - OK 200: [ Data.Group ]
+  - *group/GROUP_ID* - get single group
+    - return:
+      - OK 200: Data.Group
+      - NotFound 404: GROUP_ID not found
+  - *groupawait* - get all pending groups
+    - return:
+      - OK 200: [ Data.Group ]
+  - *groupawait/GROUP_ID* - get single pending group
+    - return:
+      - OK 200: Data.Group
+      - NotFound 404: GROUP_ID not found
+
+### POST
+  - *login* - generate JWT token (JWT not required)
+    - body: Data.User
+    - return:
+      - OK 200: { token }
+      - Unauthorized 401: user not found or password mismatch
+  - *lecturer/PASSWORD* - add new lecturer (admin only)
+    - body: Data.Lecturer
+    - return:
+      - OK 200: lecturer added
+      - Unauthorized 401: user not an admin
+      - BadRequest 400: PASSWORD is null or empty
+      - Conflict 409: lecturer already exists
+  - *course* - add new course
+    - body: Data.Course
+    - return:
+      - OK 200: course added
+      - Unauthorized 401: user don't exist
+      - RedirectToAction 302: user not an admin, redirected to endpoint *courseawait*
+      - Conflict 409: course already exists
+  - *course/accept* - accept pending course (admin only)
+    - body: Data.CourseMsg
+    - return:
+      - OK 200: course accepted
+      - Unauthorized 401: user not an admin
+      - NotFound 404: course not found
+  - *courseawait* - add new pending course
+    - body: Data.Course
+    - return:
+      - OK 200: pending course added
+      - Unauthorized 401: user don't exist
+      - Conflict 409: course already exists
+  - *courseawait/COURSE_ID* - send pending course for acceptation
+    - return:
+      - OK 200: pending course added
+      - Unauthorized 401: user don't exist or user is not an owner of a course (must be admin otherwise)
+      - NotFound 404: pending course not found
+  - *group* - add new group (admin only)
+    - body: Data.Group
+    - return:
+      - OK 200: group added
+      - BadRequest 400: group course not found
+      - Unauthorized 401: user not an admin
+      - Conflict 409: group already exists
+  - *group/accept* - accept request for signing into course group
+    - body: Data.GroupMsg
+    - return:
+      - OK 200: request accepted
+      - Unauthorized 401: user don't exist or user is not an owner of a  group course (must be admin otherwise)
+      - NotFound 404: group not found
+  - *group/GROUP_ID* - create request for signing into course group
+    - return:
+      - OK 200: request added
+      - Unauthorized 401: user don't exist
+      - NotFound 404: group not found
+  - *groupawait* - add new pending group
+    - body: Data.Group
+    - return:
+      - OK 200: group added
+      - BadRequest 400: group course not found
+      - Unauthorized 401: user don't exist or user is not an owner of a  group course (must be admin otherwise)
+      - Conflict 409: group already exists
+
+### PUT
+  - *lecturer* - update lecturer data
+    - body: Data.Lecturer
+    - return:
+      - OK 200: lecturer updated
+      - Unauthorized 401: user ID and lecturer ID in body mismatched or user not found
+  - *lecturer/pass* - update lecturer password
+    - body: Data.Password
+    - return:
+      - OK 200: lecturer password updated
+      - Unauthorized 401: user ID and lecturer ID in body mismatched or user not found
+      - BadRequest 400: password in body is null or empty
+  - *course* - update course data
+    - body: Data.Course
+    - return:
+      - OK 200: course updated
+      - Unauthorized 401: user don't exist or user is not an owner of a course (must be admin otherwise)
+      - NotFound 404: course not found
+  - *courseawait* - update pending course data
+    - body: Data.Course
+    - return:
+      - OK 200: course updated
+      - Unauthorized 401: user don't exist or user is not an owner of a course (must be admin otherwise)
+      - NotFound 404: course not found
+  - *group* - update group data
+    - body: Data.Group
+    - return:
+      - OK 200: group updated
+      - Unauthorized 401: user don't exist or user is not an owner of a group course (must be admin otherwise)
+      - NotFound 404: group not found
+  - *groupawait* - update pending group data
+    - body: Data.Group
+    - return:
+      - OK 200: pending group updated
+      - Unauthorized 401: user don't exist or user is not an owner of a group course (must be admin otherwise)
+      - NotFound 404: pending group not found
+
+### DELETE
+  - *lecturer/LECTURER_ID* - delete lecturer (admin only)
+    - return:
+      - OK 200: lecturer deleted
+      - Unauthorized 401: user not an admin
+      - NotFound 404: lecturer not found
+  - *course/COURSE_ID* - delete course (admin only)
+    - return:
+      - OK 200: course deleted
+      - Unauthorized 401: user not an admin
+      - NotFound 404: course not found
+  - *courseawait/COURSE_ID* - delete pending course
+    - return:
+      - OK 200: pending course deleted
+      - Unauthorized 401: user don't exist or user is not an owner of a course (must be admin otherwise)
+      - NotFound 404: pending course not found
+  - *group/GROUP_ID* - delete group (admin only)
+    - return:
+      - OK 200: group deleted
+      - Unauthorized 401: user not an admin
+      - NotFound 404: group not found
+  - *groupawait/GROUP_ID* - delete pending group
+    - return:
+      - OK 200: group deleted
+      - Unauthorized 401: user don't exist or user is not an owner of a group course (must be admin otherwise)
+      - NotFound 404: pending group not found
