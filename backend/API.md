@@ -2,7 +2,7 @@
 
 **Listening port:** 4200
 
-Authentication method based on JWT passed in header named **Authorization: Bearer <token>**. 
+Authentication method based on JWT passed in header named **Authorization: Bearer token**. 
 
 ### GET
   - *lecturer* - get all lecturers
