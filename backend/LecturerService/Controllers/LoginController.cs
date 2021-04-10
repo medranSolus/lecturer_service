@@ -31,7 +31,7 @@ namespace LecturerService.Controllers
         [AllowAnonymous]
         public IActionResult Login([FromBody]Data.User login)
         {
-            //if (AuthenticateUser(login))
+            if (AuthenticateUser(login))
                 return Ok(new { token = GenerateJWT(login) });
             return Unauthorized();
         }
@@ -50,13 +50,12 @@ namespace LecturerService.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.Login),
-                new Claim(JwtRegisteredClaimNames.CHash, Data.Security.GetHash(user.Password))
+                new Claim(JwtRegisteredClaimNames.NameId, user.Login)
             };
 
-            var token = new JwtSecurityToken(config["JWT:Issuer"],
-                config["JWT:Issuer"],
-                claims,
+            var token = new JwtSecurityToken(issuer: config["JWT:Issuer"],
+                audience: config["JWT:Issuer"],
+                claims: claims,
                 expires: DateTime.Now.AddHours(2),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);

@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/backend/LecturerService/bin/Debug/netcoreapp3.1/LecturerService.dll",
+            "program": "${workspaceFolder}/backend/LecturerService/bin/Debug/netcoreapp5.0/LecturerService.dll",
             "args": [],
             "cwd": "${workspaceFolder}/backend/LecturerService",
             "stopAtEntry": false,
