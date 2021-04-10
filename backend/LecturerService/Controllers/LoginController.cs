@@ -38,7 +38,7 @@ namespace LecturerService.Controllers
 
         bool AuthenticateUser(Data.User login)
         {
-            Model.Password pass = dbCtx.Passwords.Find(new Model.Password{ ID = login.Login });
+            Model.Password pass = dbCtx.Passwords.Find(login.Login);
             if (pass != null)
                 return pass.Pass == Data.Security.GetHash(login.Password);
             return false;

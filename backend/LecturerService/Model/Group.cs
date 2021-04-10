@@ -30,6 +30,11 @@ namespace LecturerService.Model
         public Data.WeekType WeekTypeID { get; set; }
         public EnumTab.WeekType WeekType { get; set; }
 
+        [ForeignKey("Day")]
+        [Required(ErrorMessage = "Must week day of course group!")]
+        public Data.Day DayID { get; set; }
+        public EnumTab.Day Day { get; set; }
+
         [Required(ErrorMessage = "Starting hour of group cannot be empty!")]
         public byte StartHour { get; set; }
 
@@ -58,6 +63,7 @@ namespace LecturerService.Model
             Room = group.Room;
             Building = group.Building;
             WeekTypeID = group.WeekTypeID;
+            DayID = group.DayID;
             StartHour = group.StartHour;
             StartMinute = group.StartMinute;
             EndHour = group.EndHour;

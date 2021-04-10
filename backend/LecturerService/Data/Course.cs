@@ -6,6 +6,7 @@ namespace LecturerService.Data
     public class Course
     {
         public string ID { get; set; }
+        public bool Accepted { get; set; }
 
 #region Basic info
         public string Name { get; set; }
@@ -35,6 +36,7 @@ namespace LecturerService.Data
         public Course(Model.Course course)
         {
             ID = course.ID;
+            Accepted = course.Accepted;
             Name = course.Name;
             TypeID = course.TypeID;
             LanguageTypeID = course.LanguageTypeID;

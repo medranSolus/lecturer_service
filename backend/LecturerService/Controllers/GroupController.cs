@@ -45,13 +45,16 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Post([FromBody]Data.Group group)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
                 return Unauthorized();
-            if (dbCtx.Groups.Find(group.ID) == null && dbCtx.PendingGroups.Find(group.ID) == null)
+            if (dbCtx.Groups.Find(group.ID) == null)
             {
                 Model.Course cs = dbCtx.Courses.Find(group.CourseID);
                 if (cs == null)
                     return BadRequest();
+                else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
+                    return Unauthorized();
                 dbCtx.Groups.Add(new Model.Group(group));
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
@@ -68,17 +71,14 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Group gp = dbCtx.PendingGroups.Find(msg.GroupID);
-            if (gp == null)
-            {
-                gp = dbCtx.Groups.Find(msg.GroupID);
-                if (gp == null)
-                    return NotFound();
-            }
-            if (gp.Course.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
+            Model.Group gp = dbCtx.Groups.Find(msg.GroupID);
+            Model.GroupMsg gpMsg = dbCtx.GroupNotification.Find(msg.ID);
+            if (gp == null || gpMsg == null)
+                return NotFound();
+            else if (gp.Course.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
                 return Unauthorized();
             gp.LecturerID = msg.LecturerID;
-            dbCtx.GroupNotification.Remove(new Model.GroupMsg(msg));
+            dbCtx.GroupNotification.Remove(gpMsg);
             dbCtx.SaveChanges();
             return Ok();
         }
@@ -91,13 +91,9 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Group gp = dbCtx.PendingGroups.Find(groupId);
+            Model.Group gp = dbCtx.Groups.Find(groupId);
             if (gp == null)
-            {
-                gp = dbCtx.Groups.Find(groupId);
-                if (gp == null)
-                    return NotFound();
-            }
+                return NotFound();
             dbCtx.GroupNotification.Add(new Model.GroupMsg{ GroupID = groupId, LecturerID = lc.ID });
             dbCtx.SaveChanges();
             return Ok();
@@ -114,7 +110,7 @@ namespace LecturerService.Controllers
             Model.Group gp = dbCtx.Groups.Find(group.ID);
             if (gp == null)
                 return NotFound();
-            else if (lc.RoleTypeID != Data.Role.Admin && gp.Course.LecturerID != lc.ID)
+            else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || !gp.Course.Accepted && gp.Course.LecturerID != lc.ID))
                 return Unauthorized();
             gp = new Model.Group(group);
             dbCtx.SaveChanges();
@@ -127,11 +123,14 @@ namespace LecturerService.Controllers
         [Route("{groupId}")]
         public IActionResult Delete(string groupId)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
                 return Unauthorized();
             Model.Group gp = dbCtx.Groups.Find(groupId);
             if (gp == null)
                 return NotFound();
+            else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || !gp.Course.Accepted && gp.Course.LecturerID != lc.ID))
+                return Unauthorized();
             dbCtx.Groups.Remove(gp);
             dbCtx.SaveChanges();
             return Ok();

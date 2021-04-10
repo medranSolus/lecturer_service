@@ -126,8 +126,8 @@ namespace LecturerService.Controllers
             dbCtx.Lecturers.Remove(lc);
             foreach (var cs in dbCtx.Courses.Where(c => c.LecturerID == lecturerId))
                 cs.LecturerID = null;
-            foreach (var cs in dbCtx.PendingCourses.Where(c => c.LecturerID == lecturerId))
-                cs.LecturerID = null;
+            foreach (var gp in dbCtx.Groups.Where(c => c.LecturerID == lecturerId))
+                gp.LecturerID = null;
             dbCtx.SaveChanges();
             return Ok();
         }

@@ -8,6 +8,8 @@ namespace LecturerService.Model
         [Key]
         public string ID { get; set; }
 
+        public bool Accepted { get; set; }
+
 #region Basic info
         [Required(ErrorMessage = "Course name cannot be empty!")]
         public string Name { get; set; }
@@ -66,6 +68,7 @@ namespace LecturerService.Model
         public Course(Data.Course course)
         {
             ID = course.ID;
+            Accepted = course.Accepted;
             Name = course.Name;
             TypeID = course.TypeID;
             LanguageTypeID = course.LanguageTypeID;

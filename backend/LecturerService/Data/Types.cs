@@ -11,6 +11,15 @@ namespace LecturerService.Data
         Deutch = 2
     }
 
+    public enum Day : byte
+    {
+        Monday = 0,
+        Tuesday = 1,
+        Wednesday = 2,
+        Thursday = 3,
+        Friday = 4
+    }
+
     public enum WeekType : byte
     {
         All = 0,

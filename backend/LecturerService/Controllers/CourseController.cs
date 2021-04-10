@@ -48,11 +48,11 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            if (lc.RoleTypeID != Data.Role.Admin)
-                return RedirectToAction("Post", "CourseAwait", new { course = course });
-            if (dbCtx.Courses.Find(course.ID) == null && dbCtx.PendingCourses.Find(course.ID) == null)
+            if (dbCtx.Courses.Find(course.ID) == null)
             {
                 course.LecturerID = lc.ID;
+                if (lc.RoleTypeID != Data.Role.Admin)
+                    course.Accepted = false;
                 dbCtx.Courses.Add(new Model.Course(course));
                 dbCtx.SaveChanges();
                 // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
@@ -68,17 +68,32 @@ namespace LecturerService.Controllers
         {
             if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
                 return Unauthorized();
-            Model.Course cs = dbCtx.PendingCourses.Find(msg.CourseID);
+            Model.Course cs = dbCtx.Courses.Find(msg.CourseID);
+            Model.CourseMsg csMsg = dbCtx.CoursesToCheck.Find(msg.ID);
+            if (cs == null || csMsg == null)
+                return NotFound();
+            cs.Accepted = true;
+            dbCtx.CoursesToCheck.Remove(csMsg);
+            dbCtx.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("{courseId}")]
+        public IActionResult Post(string courseId)
+        {
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
+                return Unauthorized();
+            Model.Course cs = dbCtx.Courses.Find(courseId);
             if (cs == null)
                 return NotFound();
-            dbCtx.Courses.Add(cs);
-            foreach (var gp in dbCtx.PendingGroups.Where(g => g.CourseID == cs.ID))
-            {
-                dbCtx.PendingGroups.Remove(gp);
-                dbCtx.Groups.Add(gp);
-            }
-            dbCtx.PendingCourses.Remove(cs);
-            dbCtx.CoursesToCheck.Remove(new Model.CourseMsg(msg));
+            else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
+                return Unauthorized();
+            else if (cs.Accepted)
+                return BadRequest();
+            dbCtx.CoursesToCheck.Add(new Model.CourseMsg{ CourseID = courseId });
             dbCtx.SaveChanges();
             return Ok();
         }
@@ -94,7 +109,7 @@ namespace LecturerService.Controllers
             Model.Course cs = dbCtx.Courses.Find(course.ID);
             if (cs == null)
                 return NotFound();
-            else if (cs.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
+            else if (lc.RoleTypeID != Data.Role.Admin && (cs.Accepted || !cs.Accepted && cs.LecturerID != lc.ID))
                 return Unauthorized();
             cs = new Model.Course(course);
             dbCtx.SaveChanges();
@@ -107,11 +122,14 @@ namespace LecturerService.Controllers
         [Route("{courseId}")]
         public IActionResult Delete(string courseId)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
                 return Unauthorized();
             Model.Course cs = dbCtx.Courses.Find(courseId);
             if (cs == null)
                 return NotFound();
+            else if (lc.RoleTypeID != Data.Role.Admin && (cs.Accepted || !cs.Accepted && cs.LecturerID != lc.ID))
+                return Unauthorized();
             dbCtx.Courses.Remove(cs);
             dbCtx.SaveChanges();
             return Ok();
