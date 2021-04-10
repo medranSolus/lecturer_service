@@ -22,14 +22,14 @@ namespace LecturerService.Controllers
 
 #region GET
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public IActionResult Get()
         {
             return Ok(dbCtx.Courses.Select(c => new Data.CourseShort(c)).ToArray());
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         [Route("{courseId}")]
         public IActionResult Get(string courseId)
         {

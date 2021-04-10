@@ -10,6 +10,7 @@ namespace LecturerService.Data
 
 #region Basic info
         public string Name { get; set; }
+        public string Department { get; set; }
         public Data.CourseType TypeID { get; set; }
         public Data.Lang LanguageTypeID { get; set; }
         public byte Ects { get; set; }
@@ -38,6 +39,7 @@ namespace LecturerService.Data
             ID = course.ID;
             Accepted = course.Accepted;
             Name = course.Name;
+            Department = course.Department;
             TypeID = course.TypeID;
             LanguageTypeID = course.LanguageTypeID;
             Ects = course.Ects;

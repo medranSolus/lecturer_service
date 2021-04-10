@@ -22,14 +22,14 @@ namespace LecturerService.Controllers
 
 #region GET
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public IActionResult Get()
         {
             return Ok(dbCtx.Lecturers.Select(l => new Data.Lecturer(l)).ToArray());
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         [Route("{lecturerId}")]
         public IActionResult Get(string lecturerId)
         {
@@ -40,7 +40,7 @@ namespace LecturerService.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         [Route("notify")]
         public IActionResult GetNotifications()
         {
@@ -50,7 +50,7 @@ namespace LecturerService.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         [Route("notify/{lecturerId}")]
         public IActionResult GetNotifications(string lecturerId)
         {

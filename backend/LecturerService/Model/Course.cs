@@ -14,6 +14,9 @@ namespace LecturerService.Model
         [Required(ErrorMessage = "Course name cannot be empty!")]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "Course department cannot be empty!")]
+        public string Department { get; set; }
+
         [ForeignKey("CourseType")]
         [Required(ErrorMessage = "Course type cannot be empty!")]
         public Data.CourseType TypeID { get; set; }
@@ -70,6 +73,7 @@ namespace LecturerService.Model
             ID = course.ID;
             Accepted = course.Accepted;
             Name = course.Name;
+            Department = course.Department;
             TypeID = course.TypeID;
             LanguageTypeID = course.LanguageTypeID;
             Ects = course.Ects;
