@@ -22,18 +22,19 @@ export class AuthService {
 
   }
 
-  public login(form: FormGroup): Observable<any> {
+  public login(login: string, password: string, rememberMe: boolean): Observable<any> {
     const body = {
-      "email": form.get('email').value,
-      "password": form.get('password').value
+      "Login": login,
+      "Password": password
     }
 
-    return this.http.post(this.baseURL + 'auth', body)
+    return this.http.post(this.baseURL + 'login', body)
       .pipe(tap(
         res => {
-          this.storageService.setUserToken(res.data.accessToken, form.get('rememberMe').value);
-          const tokenPayload = this.jwtHelper.decodeToken(res.data.accessToken);
-          this.storageService.setUserID(tokenPayload._id, form.get('rememberMe').value)
+          console.log(res)
+          this.storageService.setUserToken(res.token, rememberMe);
+          //const tokenPayload = this.jwtHelper.decodeToken(res.token);
+          //this.storageService.setUserID(tokenPayload._id, rememberMe);
         }
       ));
   }
@@ -52,7 +53,7 @@ export class AuthService {
 
   public logout() {
     this.storageService.logout();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/login']);
   }
 
   public isUserLogedIn() {

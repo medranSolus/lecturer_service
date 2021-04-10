@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CoursesModule } from './modules/courses/courses.module';
 import { LecturersModule } from './modules/lecturers/lecturers.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
     MatIconModule,
     CoursesModule,
     LecturersModule,
-    ScheduleModule
+    ScheduleModule,
+    NgbModule
   ],
   providers: [
     { 

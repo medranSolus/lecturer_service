@@ -8,13 +8,13 @@
                     </mat-card-title>
                     <mat-card-content class="d-flex flex-column fields">
                         <mat-form-field appearance="fill">
-                            <mat-label>E-mail</mat-label>
-                            <input matInput placeholder="E-mail" [formControl]="form.controls['email']" required>
-                            <mat-error *ngIf="form.controls['email']">{{getEmailErrorMessage()}}</mat-error>
+                            <mat-label>Login</mat-label>
+                            <input matInput placeholder="E-mail" [formControl]="form.controls['login']" required>
+                            <mat-error *ngIf="form.controls['login'].invalid">You must enter a value</mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="fill">
                             <mat-label>Hasło</mat-label>
-                            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" minlength="6" maxlength="32" [formControl]="form.controls['password']" required>
+                            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" minlength="4" maxlength="32" [formControl]="form.controls['password']" required>
                             <mat-error *ngIf="form.controls['password'].invalid">{{getPasswordErrorMessage()}}</mat-error>
                         </mat-form-field>
                         <div class="alert alert-danger" *ngIf="loginError">

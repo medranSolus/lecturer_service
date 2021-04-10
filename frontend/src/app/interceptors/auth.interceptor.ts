@@ -17,7 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const userToken = this.storageService.getUserToken();
     if(userToken) {
       const authReq = request.clone({
-        headers: request.headers.set('x-auth-token', userToken)
+        headers: request.headers.set('Authorization', `Bearer ${userToken}`)
       });
       return next.handle(authReq);
     }
