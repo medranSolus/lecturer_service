@@ -1,8 +1,5 @@
 namespace LecturerService.Data
 {
-    // Bits 7-0: Day, bits 15-8: Month
-    using PackedDate = System.UInt16;
-
     public class Course
     {
         public string ID { get; set; }
@@ -10,18 +7,17 @@ namespace LecturerService.Data
 
 #region Basic info
         public string Name { get; set; }
-        public int DepartmentID { get; set; }
-        public string Department { get; set; }
-        public Data.CourseType TypeID { get; set; }
-        public Data.Lang LanguageTypeID { get; set; }
+        public Department DepartmentID { get; set; }
+        public CourseType TypeID { get; set; }
+        public Lang LanguageTypeID { get; set; }
         public byte Ects { get; set; }
         public byte HoursUniversity { get; set; }
         public byte HoursStudent { get; set; }
 #endregion // Basic info
 
 #region Dates
-        public Data.Semester SemesterTypeID { get; set; }
-        public Data.WeekType WeekTypeID { get; set; }
+        public Semester SemesterTypeID { get; set; }
+        public WeekType WeekTypeID { get; set; }
         public uint Year { get; set; }
         public byte StartMonth { get; set; }
         public byte StartDay { get; set; }
@@ -41,7 +37,6 @@ namespace LecturerService.Data
             Accepted = course.Accepted;
             Name = course.Name;
             DepartmentID = course.DepartmentID;
-            Department = course.Department.Name;
             TypeID = course.TypeID;
             LanguageTypeID = course.LanguageTypeID;
             Ects = course.Ects;

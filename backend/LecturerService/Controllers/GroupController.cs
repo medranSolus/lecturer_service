@@ -38,6 +38,17 @@ namespace LecturerService.Controllers
                 return NotFound();
             return Ok(new Data.Group(gp));
         }
+
+        [HttpGet]
+        [Authorize]
+        [Route("lecturer")]
+        public IActionResult GetLecturer()
+        {
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            if (lc == null)
+                return Unauthorized();
+            return Ok(dbCtx.Groups.Where(g => g.LecturerID == lc.ID).Select(g => new Data.Group(g)).ToArray());
+        }
 #endregion // GET
 
 #region POST

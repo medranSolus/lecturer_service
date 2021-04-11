@@ -21,7 +21,7 @@ VALUES
     (3, 'Thursday'),
     (4, 'Friday');
 
-INSERT INTO Department (ID, Name)
+INSERT INTO Department (Type, Name)
 VALUES
     (0, 'W1'),
     (1, 'W2'),

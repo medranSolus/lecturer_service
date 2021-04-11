@@ -6,7 +6,7 @@ namespace LecturerService.Data
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Mail { get; set; }
-        public Data.Role RoleTypeID { get; set; }
+        public Role RoleTypeID { get; set; }
 
 #nullable enable
         public string? Phone { get; set; }

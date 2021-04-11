@@ -12,8 +12,8 @@ namespace LecturerService.Data
 #endregion // Location
 
 #region Time
-        public Data.WeekType WeekTypeID { get; set; }
-        public Data.Day DayID { get; set; }
+        public WeekType WeekTypeID { get; set; }
+        public Day DayID { get; set; }
         public byte StartHour { get; set; }
         public byte StartMinute { get; set; }
         public byte EndHour { get; set; }

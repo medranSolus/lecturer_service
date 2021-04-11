@@ -16,8 +16,8 @@ namespace LecturerService.Model
 
         [ForeignKey("Department")]
         [Required(ErrorMessage = "Course department cannot be empty!")]
-        public int DepartmentID { get; set; }
-        public Department Department { get; set; }
+        public Data.Department DepartmentID { get; set; }
+        public EnumTab.Department Department { get; set; }
 
         [ForeignKey("CourseType")]
         [Required(ErrorMessage = "Course type cannot be empty!")]

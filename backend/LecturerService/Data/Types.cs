@@ -27,6 +27,26 @@ namespace LecturerService.Data
         Odd = 2
     }
 
+    public enum Department : byte
+    {
+        W1 = 0,
+        W2 = 1,
+        W3 = 2,
+        W4 = 3,
+        W5 = 4,
+        W6 = 5,
+        W7 = 6,
+        W8 = 7,
+        W9 = 8,
+        W10 = 9,
+        W11 = 10,
+        W12 = 11,
+        W13 = 12,
+        FJG = 13,
+        FW = 14,
+        FL = 15
+    }
+
     public enum CourseType : byte
     {
         Other = 0,
