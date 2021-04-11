@@ -11,6 +11,8 @@ namespace LecturerService.Data
     {
         static HashAlgorithm algorithm = SHA256.Create();
 
+        public static string ClaimLoginID { get; } = "LecturerIdentifier";
+
         public static string GetHash(string pass)
         {
             StringBuilder str = new StringBuilder();
@@ -21,10 +23,9 @@ namespace LecturerService.Data
 
         public static Model.Lecturer GetLecturer(HttpContext context, Model.LSContext dbCtx)
         {
-            var identity = context.User.Identity as ClaimsIdentity;
-            if (identity != null )
+            if (context.User.Identity is ClaimsIdentity identity)
             {
-                Claim claim = identity.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
+                Claim claim = identity.Claims.FirstOrDefault(c => c.Type == ClaimLoginID);
                 if (claim != null)
                    return dbCtx.Lecturers.Find(claim.Value);
             }
