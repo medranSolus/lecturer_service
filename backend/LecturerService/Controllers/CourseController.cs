@@ -45,7 +45,7 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Post([FromBody]Data.Course course)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             if (dbCtx.Courses.Find(course.ID) == null)
@@ -66,7 +66,7 @@ namespace LecturerService.Controllers
         [Route("accept")]
         public IActionResult Post([FromBody]Data.CourseMsg msg)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            if (!Data.Security.IsAdmin(HttpContext, dbCtx))
                 return Unauthorized();
             Model.Course cs = dbCtx.Courses.Find(msg.CourseID);
             Model.CourseMsg csMsg = dbCtx.CoursesToCheck.Find(msg.ID);
@@ -83,7 +83,7 @@ namespace LecturerService.Controllers
         [Route("{courseId}")]
         public IActionResult Post(string courseId)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             Model.Course cs = dbCtx.Courses.Find(courseId);
@@ -103,7 +103,7 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Put([FromBody]Data.Course course)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             Model.Course cs = dbCtx.Courses.Find(course.ID);
@@ -122,7 +122,7 @@ namespace LecturerService.Controllers
         [Route("{courseId}")]
         public IActionResult Delete(string courseId)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             Model.Course cs = dbCtx.Courses.Find(courseId);

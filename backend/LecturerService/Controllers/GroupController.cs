@@ -44,7 +44,7 @@ namespace LecturerService.Controllers
         [Route("lecturer")]
         public IActionResult GetLecturer()
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             return Ok(dbCtx.Groups.Where(g => g.LecturerID == lc.ID).Select(g => new Data.Group(g)).ToArray());
@@ -56,7 +56,7 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Post([FromBody]Data.Group group)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             if (dbCtx.Groups.Find(group.ID) == null)
@@ -79,7 +79,7 @@ namespace LecturerService.Controllers
         [Route("accept")]
         public IActionResult Post([FromBody]Data.GroupMsg msg)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             Model.Group gp = dbCtx.Groups.Find(msg.GroupID);
@@ -99,7 +99,7 @@ namespace LecturerService.Controllers
         [Route("{groupId}")]
         public IActionResult Post(string groupId)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             Model.Group gp = dbCtx.Groups.Find(groupId);
@@ -115,7 +115,7 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Put([FromBody]Data.Group group)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             Model.Group gp = dbCtx.Groups.Find(group.ID);
@@ -134,7 +134,7 @@ namespace LecturerService.Controllers
         [Route("{groupId}")]
         public IActionResult Delete(string groupId)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
             Model.Group gp = dbCtx.Groups.Find(groupId);

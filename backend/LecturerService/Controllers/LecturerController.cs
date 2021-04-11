@@ -44,7 +44,7 @@ namespace LecturerService.Controllers
         [Route("notify")]
         public IActionResult GetNotifications()
         {
-            if (Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            if (Data.Security.IsAdmin(HttpContext, dbCtx))
                 return Ok(dbCtx.CoursesToCheck.Select(msg => new Data.CourseMsgInfo(msg)).ToArray());
             return Unauthorized();
         }
@@ -54,7 +54,7 @@ namespace LecturerService.Controllers
         [Route("notify/{lecturerId}")]
         public IActionResult GetNotifications(string lecturerId)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc != null && lc.ID == lecturerId)
                 return Ok(dbCtx.GroupNotification.Where(msg => msg.LecturerID == lecturerId).Select(msg => new Data.GroupMsgInfo(msg)).ToArray());
             return Unauthorized();
@@ -66,7 +66,7 @@ namespace LecturerService.Controllers
         [Route("{password}")]
         public IActionResult Post(string password, [FromBody]Data.Lecturer lecturer)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            if (!Data.Security.IsAdmin(HttpContext, dbCtx))
                 return Unauthorized();
             if (String.IsNullOrEmpty(password))
                 return BadRequest();
@@ -86,7 +86,7 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Put([FromBody]Data.Lecturer lecturer)
         {
-            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null || lc.ID != lecturer.ID)
                 Unauthorized();
             lc = new Model.Lecturer(lecturer);
@@ -100,7 +100,7 @@ namespace LecturerService.Controllers
         [Route("pass")]
         public IActionResult Put([FromBody]Data.Password password)
         {
-            Model.Lecturer caller = Data.Security.GetLecturer(HttpContext.User.Identity, dbCtx);
+            Model.Lecturer caller = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (caller == null || caller.ID != password.ID)
                 return Unauthorized();
             if (String.IsNullOrEmpty(password.Pass))
@@ -118,7 +118,7 @@ namespace LecturerService.Controllers
         [Route("{lecturerId}")]
         public IActionResult Delete(string lecturerId)
         {
-            if (!Data.Security.IsAdmin(HttpContext.User.Identity, dbCtx))
+            if (!Data.Security.IsAdmin(HttpContext, dbCtx))
                 return Unauthorized();
             Model.Lecturer lc = dbCtx.Lecturers.Find(lecturerId);
             if (lc == null)

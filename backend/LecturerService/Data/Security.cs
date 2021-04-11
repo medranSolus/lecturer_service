@@ -1,9 +1,9 @@
 using System.Text;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Security.Principal;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace LecturerService.Data
 {
@@ -19,20 +19,17 @@ namespace LecturerService.Data
             return str.ToString();
         }
 
-        public static Model.Lecturer GetLecturer(IIdentity contextIdentity, Model.LSContext dbCtx)
+        public static Model.Lecturer GetLecturer(HttpContext context, Model.LSContext dbCtx)
         {
-            if (contextIdentity is ClaimsIdentity identity)
-            {
-                Claim claim = identity.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
-                if (claim != null)
-                    return dbCtx.Lecturers.Find(claim.Value);
-            }
+            Claim claim = context.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
+            if (claim != null)
+                return dbCtx.Lecturers.Find(claim.Value);
             return null;
         }
 
-        public static bool IsAdmin(IIdentity contextIdentity, Model.LSContext dbCtx)
+        public static bool IsAdmin(HttpContext context, Model.LSContext dbCtx)
         {
-            Model.Lecturer lc = GetLecturer(contextIdentity, dbCtx);
+            Model.Lecturer lc = GetLecturer(context, dbCtx);
             if (lc == null)
                 return false;
             return lc.RoleTypeID == Role.Admin;
