@@ -1,7 +1,7 @@
 <div class="accordion-item mb-3">
     <h2 class="accordion-header" id="{{'heading' + id}}">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" attr.data-bs-target="{{'#collapse' + id}}" aria-expanded="false" attr.aria-controls="{{'collapse' + id}}">
-        <h3>{{faculty}}</h3>
+        <h3>{{data.departmentName}}</h3>
       </button>
     </h2>
     <div id="{{'collapse' + id}}" class="accordion-collapse collapse" attr.aria-labelledby="{{'heading' + id}}" data-bs-parent="#accordionExample">
@@ -11,40 +11,39 @@
               <tr>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="course1" placeholder="Nazwa kursu">
-                        <label for="course1">Nazwa kursu</label>
+                        <input type="text" class="form-control" id="course1" placeholder="ID">
+                        <label for="course1">ID</label>
                     </div>
                 </th>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="course2" placeholder="Kierunek">
-                        <label for="course2">Kierunek</label>
+                        <input type="text" class="form-control" id="course2" placeholder="Nazwa kursu">
+                        <label for="course2">Nazwa kursu</label>
                     </div>
                 </th>
                 <th scope="col">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="course3" placeholder="Opiekun kursu">
-                        <label for="course3">Opiekun kursu</label>
-                    </div>
+                  <div class="form-floating">
+                      <input type="text" class="form-control" id="course3" placeholder="Forma zajęć">
+                      <label for="course3">Forma zajęć</label>
+                  </div>
                 </th>
+                <!-- <th scope="col">
+                  <div class="form-floating">
+                      <input type="text" class="form-control" id="course4" placeholder="Opiekun kursu">
+                      <label for="course4">Opiekun kursu</label>
+                  </div>
+                </th> -->
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Architektura komputerów</td>
-                <td>Informatyka techniczna</td>
-                <td>Janusz Biernat</td>
-              </tr>
-              <tr>
-                <td>Arytmetyka komputerów</td>
-                <td>Informatyka techniczna</td>
-                <td>Tadeusz Tomczak</td>
-              </tr>
-              <tr>
-                <td>Organizacha i architektura komputerów</td>
-                <td>Informatyka techniczna</td>
-                <td>Piotr Patronik</td>
-              </tr>
+              <ng-container *ngFor="let course of data.courses">
+                <tr>
+                  <td>{{course.id}}</td>
+                  <td>{{course.name}}</td>
+                  <td>{{getCourseType(course)}}</td>
+                  <!-- <td>{{course.courseType}}</td> -->
+                </tr>
+              </ng-container>
             </tbody>
           </table>
       </div>

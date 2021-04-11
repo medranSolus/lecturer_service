@@ -1,23 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Observable, Subscription } from 'rxjs';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit {
-
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private spinner: NgxSpinnerService) { 
-  }
-
-  ngOnInit(): void {
-  }
+export class LoginComponent implements OnInit, OnDestroy {
 
   form = new FormGroup({
     login: new FormControl('', [Validators.required]),
@@ -28,22 +22,45 @@ export class LoginComponent implements OnInit {
   hide = true;
   loginError = false;
   errorMessage = '';
+  login$: Subscription;
+  user$: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private localStorageService: LocalStorageService) { 
+  }
+
+
+  ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.login$.unsubscribe();
+    this.user$.unsubscribe();
+  }
 
   getPasswordErrorMessage() {
     if (this.form.controls['password'].hasError('required')) {
-      return 'You must enter a value';
+      return 'Pole wymagane';
     }
     if (this.form.controls['password'].hasError('minlength')) {
-      return 'Password is too short';
+      return 'Hasło jest za krótkie';
     }
     if (this.form.controls['password'].hasError('maxlength')) {
-      return 'Password is too long';
+      return 'Hasło jest za długie';
     }
     return '';
   }
 
-  getLoginErrorMessage(error): void {
-    this.errorMessage = 'Something went wrong, please try again later';
+  getLoginErrorMessage(error: HttpErrorResponse): void {
+    if (error.status === 401) {
+      this.errorMessage = 'Podane dane są nieprawidłowe'; 
+    }
+    else {
+      this.errorMessage = 'Coś poszło nie tak, spróbuj ponownie później'; 
+    }
   }
 
   onSubmit() {
@@ -52,18 +69,26 @@ export class LoginComponent implements OnInit {
       const login = this.form.get('login').value;
       const password = this.form.get('password').value;
       const rememberMe = this.form.get('rememberMe').value;
-      this.authService.login(login, password, rememberMe)
+      this.login$ = this.authService.login(login, password, rememberMe)
         .subscribe(
           response => {
             this.loginError = false;
-            this.spinner.hide();
-            this.router.navigate(['schedule']);
+            this.loadUser(rememberMe);
           },
           error => {
             this.loginError = true;
-            this.getLoginErrorMessage(error.error);
+            this.getLoginErrorMessage(error);
             this.spinner.hide();
           });
     }
+  }
+
+  private loadUser(rememberMe: boolean) {
+    this.user$ = this.authService.loadUserData()
+      .subscribe(user => {
+        this.localStorageService.setUserData(user, rememberMe);
+        this.spinner.hide();
+        this.router.navigate(['schedule']);
+      })
   }
 }

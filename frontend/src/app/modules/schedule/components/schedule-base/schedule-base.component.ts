@@ -1,47 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-
-import {
-  ChangeDetectionStrategy,
-  ViewChild,
-  TemplateRef,
-} from '@angular/core';
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours,
-} from 'date-fns';
-import { Subject } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import * as moment from 'moment';
+import { Subject, Subscription } from 'rxjs';
 import {
   CalendarDateFormatter,
   CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent,
   CalendarView,
   DAYS_OF_WEEK,
 } from 'angular-calendar';
 import { CustomDateFormatter } from '../../providers/custom-date-formatter.provider';
-
-const colors: any = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
-  },
-};
-
+import { ScheduleService } from '../../services/schedule.service';
+import { Group } from '../../models/group.model';
+import { isEmpty } from 'lodash';
 @Component({
   selector: 'app-schedule-base',
   templateUrl: './schedule-base.component.html',
@@ -52,135 +21,106 @@ const colors: any = {
     },
   ]
 })
-export class ScheduleBaseComponent {
+export class ScheduleBaseComponent implements OnDestroy, OnInit{
 
-  @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+  @Input()
+  groups: Group[];
 
-  view: CalendarView = CalendarView.Week;
-
+  view: string = 'weekly';
   CalendarView = CalendarView;
-
   viewDate: Date = new Date();
-
   locale: string = 'pl';
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-
   weekendDays: number[] = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
-
-  modalData: {
-    action: string;
-    event: CalendarEvent;
-  };
-
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      },
-    },
-    {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      },
-    },
-  ];
-
   refresh: Subject<any> = new Subject();
-
-  events: CalendarEvent[] = [
-    {
-      start: new Date('Apr 13 2021 11:30:38 GMT+0200 (czas środkowoeuropejski letni)'),
-      end: new Date('Apr 13 2021 13:30:38 GMT+0200 (czas środkowoeuropejski letni)'),
-      title: 'A 3 day event',
-      color: colors.red,
-    },
-    {
-      start: new Date('Apr 14 2021 11:30:38 GMT+0200 (czas środkowoeuropejski letni)'),
-      end: new Date('Apr 14 2021 13:30:38 GMT+0200 (czas środkowoeuropejski letni)'),
-      title: 'A 3 day event',
-      color: colors.blue,
-    },
-    {
-      start: new Date('Apr 15 2021 11:30:38 GMT+0200 (czas środkowoeuropejski letni)'),
-      end: new Date('Apr 15 2021 13:30:38 GMT+0200 (czas środkowoeuropejski letni)'),
-      title: 'A 3 day event',
-      color: colors.yellow,
-    },
-  ];
-
+  groups$: Subscription;
+  events: CalendarEvent[] = [];
+  eventsSchedule: CalendarEvent[] = [];
   activeDayIsOpen: boolean = true;
 
-  constructor(private modal: NgbModal) {}
+  constructor(private scheduleService: ScheduleService) {}
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
-    if (isSameMonth(date, this.viewDate)) {
-      if (
-        (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
-        events.length === 0
-      ) {
-        this.activeDayIsOpen = false;
-      } else {
-        this.activeDayIsOpen = true;
-      }
-      this.viewDate = date;
-    }
+  ngOnInit(): void {
+    this.loadGroupsForLoggedUser();
   }
 
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd,
-  }: CalendarEventTimesChangedEvent): void {
-    this.events = this.events.map((iEvent) => {
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd,
-        };
-      }
-      return iEvent;
-    });
-    this.handleEvent('Dropped or resized', event);
+  ngOnDestroy(): void {
+    this.groups$.unsubscribe();
   }
-
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
-  }
-
-  addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
-      },
-    ];
-  }
-
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter((event) => event !== eventToDelete);
-  }
-
-  setView(view: CalendarView) {
+  
+  setView(view: string) {
     this.view = view;
   }
 
-  closeOpenMonthViewDay() {
-    this.activeDayIsOpen = false;
+  private loadGroupsForLoggedUser() {
+    if(isEmpty(this.groups)) {
+      this.groups$ = this.scheduleService.getGroupsAssignedToLoggedUser()
+      .subscribe(groups => {
+        this.mapGroupsToEvents(groups);
+        this.mapGroupsToScheduleEvents(groups);
+      })
+    }
+    else {
+      this.mapGroupsToEvents(this.groups);
+      this.mapGroupsToScheduleEvents(this.groups);
+    }
+  }
+
+  private mapGroupsToEvents(groups: Group[]) {
+    const semesterStart = '03.01.2021'
+    const semesterEnd = '06.22.2021'
+    groups.forEach(group => {
+      const startDate = new Date(semesterStart);
+      const endDate = new Date(semesterEnd);
+      const week = moment(startDate).week() % 2;
+      const dayOfWeek = group.dayID + 1;
+      const weekType = group.weekTypeID - 1;
+      while(startDate.getDay() !== dayOfWeek) {
+        startDate.setDate(startDate.getDate() + 1);
+      }
+      if (weekType !== -1 && weekType !== week) {
+        startDate.setDate(startDate.getDate() + 7);
+      }
+      while(startDate.getTime() <= endDate.getTime()) {
+        const eventStartDate = new Date(startDate);
+        const eventEndDate = new Date(startDate);;
+        eventStartDate.setHours(group.startHour, group.startMinute);
+        eventEndDate.setHours(group.endHour, group.endMinute);
+        this.events.push({
+          start: eventStartDate,
+          end: eventEndDate,
+          title: `${group.id}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()} `
+        });
+        if(weekType !== -1) {
+          startDate.setDate(startDate.getDate() + 14);
+        } else {
+          startDate.setDate(startDate.getDate() + 7);
+        }
+      }
+    })
+  }
+
+  private mapGroupsToScheduleEvents(groups: Group[]) {
+    groups.forEach(group => {
+      const startDate = new Date();
+      const dayOfWeek = group.dayID + 1;
+      while(startDate.getDay() !== dayOfWeek) {
+        if(startDate.getDay() > dayOfWeek || startDate.getDay() === 0) {
+          startDate.setDate(startDate.getDate() - 1);
+        } else {
+          startDate.setDate(startDate.getDate() + 1);
+        }
+      }
+      const eventStartDate = new Date(startDate);
+      const eventEndDate = new Date(startDate);;
+      eventStartDate.setHours(group.startHour, group.startMinute);
+      eventEndDate.setHours(group.endHour, group.endMinute);
+      this.eventsSchedule.push({
+        start: eventStartDate,
+        end: eventEndDate,
+        title: `${group.id}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()} `
+      });
+    })
   }
 
 }

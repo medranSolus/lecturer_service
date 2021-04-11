@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { first } from 'rxjs/operators';
+import { LecturerService } from 'src/app/modules/lecturers/services/lecturer.service';
+import { CourseListItem, CourseShort, CourseType} from '../../models/courses.model';
 
 @Component({
   selector: 'app-courses-item',
@@ -7,19 +10,19 @@ import { Component, Input, OnInit } from '@angular/core';
 export class CoursesItemComponent implements OnInit {
 
   @Input()
-  faculty: string;
-
-  @Input()
-  courses: any;
+  data: CourseListItem;
 
   @Input()
   id: number;
 
   isOpened = false;
 
-  constructor() { }
+  constructor(private lecturerService: LecturerService) { }
 
   ngOnInit(): void {
   }
 
+  getCourseType(course: CourseShort): string {
+    return CourseType[course.typeID];
+  }
 }

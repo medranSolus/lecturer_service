@@ -10,10 +10,11 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
+import { ScheduleGroupPickerComponent } from './components/schedule-group-picker/schedule-group-picker.component';
 
 registerLocaleData(localePl);
 @NgModule({
-  declarations: [ScheduleBaseComponent],
+  declarations: [ScheduleBaseComponent, ScheduleGroupPickerComponent],
   imports: [
     CommonModule,
     ScheduleRoutingModule,

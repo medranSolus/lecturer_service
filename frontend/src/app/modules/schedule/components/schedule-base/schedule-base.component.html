@@ -1,68 +1,92 @@
 <div class="container mt-5">
-  <div class="row text-center">
-    <div class="col-md-4">
+  <h2>Twój plan zajęć</h2>
+  <div class="row text-center d-flex justify-content-between mt-5">
+    <div class="col-md-4 float-end">
       <div class="btn-group">
-        <div
-          class="btn btn-primary"
-          mwlCalendarPreviousView
-          [view]="view"
-          [(viewDate)]="viewDate"
-          (viewDateChange)="closeOpenMonthViewDay()"
-        >
-          Previous
+        <div class="btn btn-primary"
+             (click)="setView('schedule')"
+             [class.active]="view === 'schedule'">
+          Siatka
         </div>
-        <div
-          class="btn btn-outline-secondary"
-          mwlCalendarToday
-          [(viewDate)]="viewDate"
-        >
-          Today
-        </div>
-        <div
-          class="btn btn-primary"
-          mwlCalendarNextView
-          [view]="view"
-          [(viewDate)]="viewDate"
-          (viewDateChange)="closeOpenMonthViewDay()"
-        >
-          Next
+        <div class="btn btn-primary"
+             (click)="setView('weekly')"
+             [class.active]="view === 'weekly'">
+          Plan tygodniowy
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-    </div>
-    <div class="col-md-4">
+    <div *ngIf="view === 'weekly'" class="col-md-4">
       <div class="btn-group">
         <div class="btn btn-primary"
-          (click)="setView(CalendarView.Month)"
-          [class.active]="view === CalendarView.Month">
-          Month
+             mwlCalendarPreviousView
+             [view]="CalendarView.Week"
+             [(viewDate)]="viewDate">
+          Poprzedni
+        </div>
+        <div class="btn btn-outline-secondary"
+             mwlCalendarToday
+             [(viewDate)]="viewDate">
+          Aktualny
         </div>
         <div class="btn btn-primary"
-          (click)="setView(CalendarView.Week)"
-          [class.active]="view === CalendarView.Week">
-          Week
+             mwlCalendarNextView
+             [view]="CalendarView.Week"
+             [(viewDate)]="viewDate">
+          Następny
         </div>
       </div>
     </div>
   </div>
   <br />
   <div [ngSwitch]="view">
-    <mwl-calendar-week-view
-      *ngSwitchCase="CalendarView.Week"
-      [viewDate]="viewDate"
-      [events]="events"
-      [refresh]="refresh"
-      [locale]="locale"
-      [dayStartHour]="7"
-      [dayEndHour]="22"
-      [hourSegmentHeight]="40"
-      [hourSegments]="1"
-      [weekStartsOn]="weekStartsOn"
-      [weekendDays]="weekendDays"
-      (eventClicked)="handleEvent('Clicked', $event.event)"
-      (eventTimesChanged)="eventTimesChanged($event)">
+    <mwl-calendar-week-view *ngSwitchCase="'weekly'"
+                            [viewDate]="viewDate"
+                            [events]="events"
+                            [refresh]="refresh"
+                            [locale]="locale"
+                            [dayStartHour]="7"
+                            [dayEndHour]="22"
+                            [hourSegmentHeight]="40"
+                            [hourSegments]="1"
+                            [weekStartsOn]="weekStartsOn"
+                            [weekendDays]="weekendDays">
+    </mwl-calendar-week-view>
+    <mwl-calendar-week-view *ngSwitchCase="'schedule'"
+                            [headerTemplate]="customHeaderTemplate"
+                            [viewDate]="viewDate"
+                            [events]="eventsSchedule"
+                            [refresh]="refresh"
+                            [locale]="locale"
+                            [dayStartHour]="7"
+                            [dayEndHour]="22"
+                            [hourSegmentHeight]="40"
+                            [hourSegments]="1"
+                            [weekStartsOn]="weekStartsOn"
+                            [weekendDays]="weekendDays">
     </mwl-calendar-week-view>
   </div>
 </div>
+
+
+<ng-template #customHeaderTemplate
+             let-days="days"
+             let-locale="locale"
+             let-dayHeaderClicked="dayHeaderClicked"
+             let-eventDropped="eventDropped"
+             let-trackByWeekDayHeaderDate="trackByWeekDayHeaderDate"
+             let-dragEnter="dragEnter">
+  <div class="cal-day-headers" role="row">
+    <div class="cal-header"
+         *ngFor="let day of days; trackBy: trackByWeekDayHeaderDate"
+         [class.cal-past]="day.isPast"
+         [class.cal-today]="day.isToday"
+         [class.cal-future]="day.isFuture"
+         [class.cal-weekend]="day.isWeekend"
+         [ngClass]="day.cssClass"
+         tabindex="0"
+         role="columnheader">
+      <b>{{ day.date | calendarDate: 'weekViewColumnHeader':locale }}</b>
+      <br/>
+    </div>
+  </div>
+</ng-template>

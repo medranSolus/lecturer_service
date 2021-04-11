@@ -15,5 +15,9 @@ export class LecturerService {
     return this.http.get<Lecturer[]>(this.baseURL);
   }
 
+  getLecturerByID(id: string): Observable<Lecturer> {
+    return this.http.get<Lecturer>(this.baseURL + id);
+  }
+
   constructor(private http: HttpClient) { }
 }

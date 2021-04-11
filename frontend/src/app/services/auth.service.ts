@@ -7,6 +7,7 @@ import { map, tap } from 'rxjs/operators';
 import { LocalStorageService } from './local-storage.service';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
+import { Lecturer } from '../modules/lecturers/models/lecturer.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,22 +34,27 @@ export class AuthService {
         res => {
           console.log(res)
           this.storageService.setUserToken(res.token, rememberMe);
-          //const tokenPayload = this.jwtHelper.decodeToken(res.token);
-          //this.storageService.setUserID(tokenPayload._id, rememberMe);
+          const tokenPayload = this.jwtHelper.decodeToken(res.token);
+          this.storageService.setUserID(tokenPayload.LecturerIdentifier, rememberMe);
         }
       ));
   }
 
-  public register(form: FormGroup, URL: string) {
-    const body = {
-      "email": form.get('email').value,
-      "password": form.get('password').value,
-      "name": form.get('name').value,
-      "surname": form.get('surname').value,
-      "nick": form.get('nick').value,
-    }
+  // public register(form: FormGroup, URL: string) {
+  //   const body = {
+  //     "email": form.get('email').value,
+  //     "password": form.get('password').value,
+  //     "name": form.get('name').value,
+  //     "surname": form.get('surname').value,
+  //     "nick": form.get('nick').value,
+  //   }
 
-    return this.http.post(URL + 'users', body);
+  //   return this.http.post(URL + 'users', body);
+  // }
+
+  public loadUserData() {
+    const userID = this.storageService.getUserID();
+    return this.http.get<Lecturer>(this.baseURL + 'lecturer/' + userID);
   }
 
   public logout() {

@@ -9,8 +9,8 @@
                     <mat-card-content class="d-flex flex-column fields">
                         <mat-form-field appearance="fill">
                             <mat-label>Login</mat-label>
-                            <input matInput placeholder="E-mail" [formControl]="form.controls['login']" required>
-                            <mat-error *ngIf="form.controls['login'].invalid">You must enter a value</mat-error>
+                            <input matInput placeholder="Login" [formControl]="form.controls['login']" required>
+                            <mat-error *ngIf="form.controls['login'].invalid">Pole wymagane</mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="fill">
                             <mat-label>Hasło</mat-label>
