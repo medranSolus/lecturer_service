@@ -21,9 +21,13 @@ namespace LecturerService.Data
 
         public static Model.Lecturer GetLecturer(HttpContext context, Model.LSContext dbCtx)
         {
-            Claim claim = context.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
-            if (claim != null)
-                return dbCtx.Lecturers.Find(claim.Value);
+            var identity = context.User.Identity as ClaimsIdentity;
+            if (identity != null )
+            {
+                Claim claim = identity.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId);
+                if (claim != null)
+                   return dbCtx.Lecturers.Find(claim.Value);
+            }
             return null;
         }
 
