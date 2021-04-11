@@ -26,9 +26,10 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
   @Input()
   groups: Group[];
 
-  view: string = 'weekly';
+  view: string = 'schedule';
   CalendarView = CalendarView;
   viewDate: Date = new Date();
+  scheduleViewDate: Date = new Date();
   locale: string = 'pl';
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   weekendDays: number[] = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];

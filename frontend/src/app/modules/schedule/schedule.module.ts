@@ -11,10 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
 import { ScheduleGroupPickerComponent } from './components/schedule-group-picker/schedule-group-picker.component';
+import { ScheduleMainComponent } from './components/schedule-main/schedule-main.component';
 
 registerLocaleData(localePl);
 @NgModule({
-  declarations: [ScheduleBaseComponent, ScheduleGroupPickerComponent],
+  declarations: [ScheduleBaseComponent, ScheduleGroupPickerComponent, ScheduleMainComponent],
   imports: [
     CommonModule,
     ScheduleRoutingModule,

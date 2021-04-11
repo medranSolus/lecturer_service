@@ -1,72 +1,69 @@
-<div class="container mt-5">
-  <h2>Twój plan zajęć</h2>
-  <div class="row text-center d-flex justify-content-between mt-5">
-    <div class="col-md-4 float-end">
-      <div class="btn-group">
-        <div class="btn btn-primary"
-             (click)="setView('schedule')"
-             [class.active]="view === 'schedule'">
-          Siatka
-        </div>
-        <div class="btn btn-primary"
-             (click)="setView('weekly')"
-             [class.active]="view === 'weekly'">
-          Plan tygodniowy
-        </div>
+
+<div class="row text-center d-flex justify-content-between mt-5">
+  <div class="col-md-4 float-end">
+    <div class="btn-group">
+      <div class="btn btn-primary"
+            (click)="setView('schedule')"
+            [class.active]="view === 'schedule'">
+        Siatka
       </div>
-    </div>
-    <div *ngIf="view === 'weekly'" class="col-md-4">
-      <div class="btn-group">
-        <div class="btn btn-primary"
-             mwlCalendarPreviousView
-             [view]="CalendarView.Week"
-             [(viewDate)]="viewDate">
-          Poprzedni
-        </div>
-        <div class="btn btn-outline-secondary"
-             mwlCalendarToday
-             [(viewDate)]="viewDate">
-          Aktualny
-        </div>
-        <div class="btn btn-primary"
-             mwlCalendarNextView
-             [view]="CalendarView.Week"
-             [(viewDate)]="viewDate">
-          Następny
-        </div>
+      <div class="btn btn-primary"
+            (click)="setView('weekly')"
+            [class.active]="view === 'weekly'">
+        Plan tygodniowy
       </div>
     </div>
   </div>
-  <br />
-  <div [ngSwitch]="view">
-    <mwl-calendar-week-view *ngSwitchCase="'weekly'"
-                            [viewDate]="viewDate"
-                            [events]="events"
-                            [refresh]="refresh"
-                            [locale]="locale"
-                            [dayStartHour]="7"
-                            [dayEndHour]="22"
-                            [hourSegmentHeight]="40"
-                            [hourSegments]="1"
-                            [weekStartsOn]="weekStartsOn"
-                            [weekendDays]="weekendDays">
-    </mwl-calendar-week-view>
-    <mwl-calendar-week-view *ngSwitchCase="'schedule'"
-                            [headerTemplate]="customHeaderTemplate"
-                            [viewDate]="viewDate"
-                            [events]="eventsSchedule"
-                            [refresh]="refresh"
-                            [locale]="locale"
-                            [dayStartHour]="7"
-                            [dayEndHour]="22"
-                            [hourSegmentHeight]="40"
-                            [hourSegments]="1"
-                            [weekStartsOn]="weekStartsOn"
-                            [weekendDays]="weekendDays">
-    </mwl-calendar-week-view>
+  <div *ngIf="view === 'weekly'" class="col-md-4">
+    <div class="btn-group">
+      <div class="btn btn-primary"
+            mwlCalendarPreviousView
+            [view]="CalendarView.Week"
+            [(viewDate)]="viewDate">
+        Poprzedni
+      </div>
+      <div class="btn btn-outline-secondary"
+            mwlCalendarToday
+            [(viewDate)]="viewDate">
+        Aktualny
+      </div>
+      <div class="btn btn-primary"
+            mwlCalendarNextView
+            [view]="CalendarView.Week"
+            [(viewDate)]="viewDate">
+        Następny
+      </div>
+    </div>
   </div>
 </div>
-
+<br />
+<div *ngIf="events.length && eventsSchedule.length" [ngSwitch]="view">
+  <mwl-calendar-week-view *ngSwitchCase="'weekly'"
+                          [viewDate]="viewDate"
+                          [events]="events"
+                          [refresh]="refresh"
+                          [locale]="locale"
+                          [dayStartHour]="7"
+                          [dayEndHour]="22"
+                          [hourSegmentHeight]="40"
+                          [hourSegments]="1"
+                          [weekStartsOn]="weekStartsOn"
+                          [weekendDays]="weekendDays">
+  </mwl-calendar-week-view>
+  <mwl-calendar-week-view *ngSwitchCase="'schedule'"
+                          [headerTemplate]="customHeaderTemplate"
+                          [viewDate]="scheduleViewDate"
+                          [events]="eventsSchedule"
+                          [refresh]="refresh"
+                          [locale]="locale"
+                          [dayStartHour]="7"
+                          [dayEndHour]="22"
+                          [hourSegmentHeight]="40"
+                          [hourSegments]="1"
+                          [weekStartsOn]="weekStartsOn"
+                          [weekendDays]="weekendDays">
+  </mwl-calendar-week-view>
+</div>
 
 <ng-template #customHeaderTemplate
              let-days="days"

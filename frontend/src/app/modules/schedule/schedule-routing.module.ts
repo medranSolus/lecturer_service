@@ -1,12 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../guards/auth.guard';
-import { ScheduleBaseComponent } from './components/schedule-base/schedule-base.component';
+import { ScheduleGroupPickerComponent } from './components/schedule-group-picker/schedule-group-picker.component';
+import { ScheduleMainComponent } from './components/schedule-main/schedule-main.component';
 
 
 const routes: Routes = [
   {
-    path: 'schedule', component: ScheduleBaseComponent,
+    path: 'schedule', component: ScheduleMainComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'schedule/pick-group', component: ScheduleGroupPickerComponent,
     canActivate: [AuthGuard]
   }
 ];

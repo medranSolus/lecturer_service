@@ -88,7 +88,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(user => {
         this.localStorageService.setUserData(user, rememberMe);
         this.spinner.hide();
-        this.router.navigate(['schedule']);
+        this.router.navigate(['courses']);
       })
   }
 }
