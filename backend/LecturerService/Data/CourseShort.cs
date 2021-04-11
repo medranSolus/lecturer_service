@@ -16,7 +16,7 @@ namespace LecturerService.Data
         {
             ID = course.ID;
             Name = course.Name;
-            Department = course.Department;
+            Department = course.Department.Name;
             LecturerID = course.LecturerID;
             TypeID = course.TypeID;
             CourseGroup = course.CourseGroup;

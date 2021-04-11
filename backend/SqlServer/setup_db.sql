@@ -21,6 +21,25 @@ VALUES
     (3, 'Thursday'),
     (4, 'Friday');
 
+INSERT INTO Department (ID, Name)
+VALUES
+    (0, 'W1'),
+    (1, 'W2'),
+    (2, 'W3'),
+    (3, 'W4'),
+    (4, 'W5'),
+    (5, 'W6'),
+    (6, 'W7'),
+    (7, 'W8'),
+    (8, 'W9'),
+    (9, 'W10'),
+    (10, 'W11'),
+    (11, 'W12'),
+    (12, 'W13'),
+    (13, 'Filia w Jeleniej Górze'),
+    (14, 'Filia w Wałbrzychu'),
+    (15, 'Filia w Legnicy');
+
 INSERT INTO Lang (Type, Name)
 VALUES
     (0, 'Polish'),
@@ -59,12 +78,12 @@ VALUES
 GO
 
 INSERT INTO Courses
-    (ID, Accepted, Name, TypeID, LanguageTypeID, Ects, HoursUniversity, HoursStudent,
+    (ID, Accepted, Name, DepartmentID, TypeID, LanguageTypeID, Ects, HoursUniversity, HoursStudent,
     SemesterTypeID, Year, StartMonth, StartDay, EndMonth, EndDay, LecturerID, CourseGroup)
 VALUES
-    ('INEU15003P', 1, 'Zastosowanie informatyki w medycynie', 4, 0, 3, 15, 70,
+    ('INEU15003P', 1, 'Zastosowanie informatyki w medycynie', 3, 4, 0, 3, 15, 70,
     1, 2021, 3, 4, 6, 10, 'jb2137', 'INEU15003Wsp'),
-    ('INEU17002P', 0, 'Zastosowanie informatyki w gospodarce', 4, 0, 2 , 15, 70,
+    ('INEU17002P', 0, 'Zastosowanie informatyki w gospodarce', 3, 4, 0, 2 , 15, 70,
     1, 2021, 3, 1, 6, 7, 'dziekanat', 'INEU17002Wp');
 GO
 INSERT INTO Groups
