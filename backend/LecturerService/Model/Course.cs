@@ -37,9 +37,7 @@ namespace LecturerService.Model
 
         [Required(ErrorMessage = "Must specify course individual student work hours!")]
         public byte HoursStudent { get; set; }
-#endregion // Basic info
 
-#region Dates
         [ForeignKey("Semester")]
         [Required(ErrorMessage = "Must specify semester of course!")]
         public Data.Semester SemesterTypeID { get; set; }
@@ -47,19 +45,7 @@ namespace LecturerService.Model
         
         [Required(ErrorMessage = "Must specify year of course!")]
         public uint Year { get; set; }
-
-        [Required(ErrorMessage = "Starting month of course cannot be empty!")]
-        public byte StartMonth { get; set; }
-
-        [Required(ErrorMessage = "Starting day of course cannot be empty!")]
-        public byte StartDay { get; set; }
-
-        [Required(ErrorMessage = "Ending month of course cannot be empty!")]
-        public byte EndMonth { get; set; }
-
-        [Required(ErrorMessage = "Ending day of course cannot be empty!")]
-        public byte EndDay { get; set; }
-#endregion // Dates
+#endregion // Basic info
 
 #nullable enable
         [ForeignKey("Lecturer")]
@@ -83,10 +69,6 @@ namespace LecturerService.Model
             HoursStudent = course.HoursStudent;
             SemesterTypeID = course.SemesterTypeID;
             Year = course.Year;
-            StartMonth = course.StartMonth;
-            StartDay = course.StartDay;
-            EndMonth = course.EndMonth;
-            EndDay = course.EndDay;
             LecturerID = course.LecturerID;
             CourseGroup = course.CourseGroup;
         }

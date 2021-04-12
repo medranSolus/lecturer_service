@@ -31,7 +31,7 @@ namespace LecturerService.Controllers
         [AllowAnonymous]
         public IActionResult Login([FromBody]Data.User login)
         {
-            //if (AuthenticateUser(login))
+            if (AuthenticateUser(login))
                 return Ok(new { token = GenerateJWT(login) });
             return Unauthorized();
         }

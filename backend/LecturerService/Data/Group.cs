@@ -13,6 +13,10 @@ namespace LecturerService.Data
 
 #region Time
         public WeekType WeekTypeID { get; set; }
+        public byte StartMonth { get; set; }
+        public byte StartDay { get; set; }
+        public byte EndMonth { get; set; }
+        public byte EndDay { get; set; }
         public Day DayID { get; set; }
         public byte StartHour { get; set; }
         public byte StartMinute { get; set; }
@@ -33,6 +37,10 @@ namespace LecturerService.Data
             Room = group.Room;
             Building = group.Building;
             WeekTypeID = group.WeekTypeID;
+            StartMonth = group.StartMonth;
+            StartDay = group.StartDay;
+            EndMonth = group.EndMonth;
+            EndDay = group.EndDay;
             DayID = group.DayID;
             StartHour = group.StartHour;
             StartMinute = group.StartMinute;

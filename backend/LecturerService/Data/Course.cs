@@ -13,20 +13,13 @@ namespace LecturerService.Data
         public byte Ects { get; set; }
         public byte HoursUniversity { get; set; }
         public byte HoursStudent { get; set; }
-#endregion // Basic info
-
-#region Dates
         public Semester SemesterTypeID { get; set; }
-        public WeekType WeekTypeID { get; set; }
         public uint Year { get; set; }
-        public byte StartMonth { get; set; }
-        public byte StartDay { get; set; }
-        public byte EndMonth { get; set; }
-        public byte EndDay { get; set; }
-#endregion // Dates
+#endregion // Basic info
 
 #nullable enable
         public string? LecturerID { get; set; }
+        public string? LecturerName { get; set; }
         public string? CourseGroup { get; set; }
 #nullable disable
 
@@ -44,11 +37,11 @@ namespace LecturerService.Data
             HoursStudent = course.HoursStudent;
             SemesterTypeID = course.SemesterTypeID;
             Year = course.Year;
-            StartMonth = course.StartMonth;
-            StartDay = course.StartDay;
-            EndMonth = course.EndMonth;
-            EndDay = course.EndDay;
             LecturerID = course.LecturerID;
+            if (LecturerID != null)
+                LecturerName = course.Lecturer.Name + " " + course.Lecturer.Surname;
+            else
+                LecturerName = null;
             CourseGroup = course.CourseGroup;
         }
     }

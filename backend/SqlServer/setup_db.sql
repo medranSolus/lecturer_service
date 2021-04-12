@@ -78,28 +78,28 @@ VALUES
 GO
 
 INSERT INTO Courses
-    (ID, Accepted, Name, DepartmentID, TypeID, LanguageTypeID, Ects, HoursUniversity, HoursStudent,
-    SemesterTypeID, Year, StartMonth, StartDay, EndMonth, EndDay, LecturerID, CourseGroup)
+    (ID, Accepted, Name, DepartmentID, TypeID, LanguageTypeID, Ects,
+    HoursUniversity, HoursStudent, SemesterTypeID, Year, LecturerID, CourseGroup)
 VALUES
-    ('INEU15003P', 1, 'Zastosowanie informatyki w medycynie', 3, 4, 0, 3, 15, 70,
-    1, 2021, 3, 4, 6, 10, 'jb2137', 'INEU15003Wsp'),
-    ('INEU17002P', 0, 'Zastosowanie informatyki w gospodarce', 3, 4, 0, 2 , 15, 70,
-    1, 2021, 3, 1, 6, 7, 'dziekanat', 'INEU17002Wp');
+    ('INEU15003P', 1, 'Zastosowanie informatyki w medycynie', 3, 4, 0, 3,
+    15, 70, 1, 2021, 'jb2137', 'INEU15003Wsp'),
+    ('INEU17002P', 0, 'Zastosowanie informatyki w gospodarce', 3, 4, 0, 2,
+    15, 70, 1, 2021, 'dziekanat', 'INEU17002Wp');
 GO
 INSERT INTO Groups
-    (ID, CourseID, StudentsCount, Room, Building, WeekTypeID, DayID,
-    StartHour, StartMinute, EndHour, EndMinute, LecturerID)
+    (ID, CourseID, StudentsCount, Room, Building, WeekTypeID, StartMonth, StartDay,
+    EndMonth, EndDay, DayID, StartHour, StartMinute, EndHour, EndMinute, LecturerID)
 VALUES
-    ('E08-15e', 'INEU15003P', 25, 'L2.8', 'C-16', 1, 2,
-    18, 55, 20, 35, 'jb2137'),
-    ('E08-15f', 'INEU15003P', 25, 'L2.6', 'C-16', 1, 2,
-    18, 55, 20, 35, 'sumiks'),
-    ('E08-15g', 'INEU15003P', 25, 'L2.4', 'C-16', 1, 1,
-    17, 05, 18, 45, 'jb2137'),
-    ('E08-20a', 'INEU17002P', 18, 'L2.8', 'C-16', 2, 4,
-    18, 55, 20, 35, NULL),
-    ('E08-20b', 'INEU17002P', 18, 'L2.6', 'C-16', 2, 3,
-    18, 55, 20, 35, 'sumiks'),
-    ('E08-20c', 'INEU17002P', 18, 'L2.4', 'C-16', 2, 0,
-    17, 05, 18, 45, NULL);
+    ('E08-15e', 'INEU15003P', 25, 'L2.8', 'C-16', 1, 3, 4,
+    6, 10, 2, 18, 55, 20, 35, 'jb2137'),
+    ('E08-15f', 'INEU15003P', 25, 'L2.6', 'C-16', 1, 3, 4,
+    6, 10, 2, 18, 55, 20, 35, 'sumiks'),
+    ('E08-15g', 'INEU15003P', 25, 'L2.4', 'C-16', 1, 3, 4,
+    6, 10, 1, 17, 05, 18, 45, 'jb2137'),
+    ('E08-20a', 'INEU17002P', 18, 'L2.8', 'C-16', 2, 3, 1,
+    6, 7, 4, 18, 55, 20, 35, NULL),
+    ('E08-20b', 'INEU17002P', 18, 'L2.6', 'C-16', 2, 3, 1,
+    6, 7, 3, 18, 55, 20, 35, 'sumiks'),
+    ('E08-20c', 'INEU17002P', 18, 'L2.4', 'C-16', 2, 3, 1,
+    6, 7, 0, 17, 05, 18, 45, NULL);
 GO

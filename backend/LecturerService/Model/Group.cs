@@ -30,6 +30,18 @@ namespace LecturerService.Model
         public Data.WeekType WeekTypeID { get; set; }
         public EnumTab.WeekType WeekType { get; set; }
 
+        [Required(ErrorMessage = "Starting month of course cannot be empty!")]
+        public byte StartMonth { get; set; }
+
+        [Required(ErrorMessage = "Starting day of course cannot be empty!")]
+        public byte StartDay { get; set; }
+
+        [Required(ErrorMessage = "Ending month of course cannot be empty!")]
+        public byte EndMonth { get; set; }
+
+        [Required(ErrorMessage = "Ending day of course cannot be empty!")]
+        public byte EndDay { get; set; }
+
         [ForeignKey("Day")]
         [Required(ErrorMessage = "Must week day of course group!")]
         public Data.Day DayID { get; set; }
@@ -63,6 +75,10 @@ namespace LecturerService.Model
             Room = group.Room;
             Building = group.Building;
             WeekTypeID = group.WeekTypeID;
+            StartMonth = group.StartMonth;
+            StartDay = group.StartDay;
+            EndMonth = group.EndMonth;
+            EndDay = group.EndDay;
             DayID = group.DayID;
             StartHour = group.StartHour;
             StartMinute = group.StartMinute;
