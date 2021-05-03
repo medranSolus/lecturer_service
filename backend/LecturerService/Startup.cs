@@ -24,7 +24,7 @@ namespace LecturerService
         {
             services.AddCors(o => o.AddDefaultPolicy(builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.SetIsOriginAllowed(x => true)
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
