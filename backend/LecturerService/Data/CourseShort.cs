@@ -20,7 +20,7 @@ namespace LecturerService.Data
             DepartmentID = course.DepartmentID;
             TypeID = course.TypeID;
             LecturerID = course.LecturerID;
-            if (LecturerID != null)
+            if (course.Lecturer != null)
                 LecturerName = course.Lecturer.Name + " " + course.Lecturer.Surname;
             else
                 LecturerName = null;
