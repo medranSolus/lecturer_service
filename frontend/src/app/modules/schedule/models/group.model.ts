@@ -36,4 +36,16 @@ export class Group {
 
     @deserialize
     lecturerID: string
+
+    @deserialize
+    endDay: number
+
+    @deserialize
+    endMonth: number
+
+    @deserialize
+    startDay: number
+
+    @deserialize
+    startMonth: number
 }

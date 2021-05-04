@@ -1,11 +1,11 @@
-<div class="navbar">
+<div *ngIf="isUserLoggedIn()" class="navbar">
     <div class="navbar-item item-left"></div>
     <div class="navbar-links">
         <a routerLink="/schedule" class="navbar-item link-item" >Twój plan</a> 
         <a routerLink="/courses" class="navbar-item link-item" >Lista kursów</a> 
         <a routerLink="/lecturers" class="navbar-item link-item" >Lista prowadzących</a> 
     </div> 
-    <div *ngIf="isUserLoggedIn()" class="navbar-item item-right">
+    <div class="navbar-item item-right">
         <a routerLink="/" class="user-item">
             <div class="account"><mat-icon >account_box</mat-icon> </div>
             <div class="link-item"> {{getUserName()}} </div>

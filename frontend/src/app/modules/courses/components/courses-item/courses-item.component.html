@@ -6,24 +6,24 @@
     </h2>
     <div id="{{'collapse' + id}}" class="accordion-collapse collapse" attr.aria-labelledby="{{'heading' + id}}" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <table class="table table-hover">
+        <table *ngIf="filteredData else noData" class="table table-hover">
             <thead>
               <tr>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="course1" placeholder="ID">
+                        <input type="text" class="form-control" id="course1" placeholder="ID" (input)="filterByID($event.target.value)">
                         <label for="course1">ID</label>
                     </div>
                 </th>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="course2" placeholder="Nazwa kursu">
+                        <input type="text" class="form-control" id="course2" placeholder="Nazwa kursu" (input)="filterByName($event.target.value)">
                         <label for="course2">Nazwa kursu</label>
                     </div>
                 </th>
                 <th scope="col">
                   <div class="form-floating">
-                      <input type="text" class="form-control" id="course3" placeholder="Forma zajęć">
+                      <input type="text" class="form-control" id="course3" placeholder="Forma zajęć" (input)="filterByType($event.target.value)">
                       <label for="course3">Forma zajęć</label>
                   </div>
                 </th>
@@ -36,7 +36,7 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngFor="let course of data.courses">
+              <ng-container *ngFor="let course of filteredData">
                 <tr>
                   <td>{{course.id}}</td>
                   <td>{{course.name}}</td>
@@ -49,4 +49,11 @@
       </div>
     </div>
 </div>
+
+<ng-template #noData>
+  <div class="alert alert-warning text-center">
+    Dla danego wydziału nie są dostępne żadne kursy
+  </div>
+  
+</ng-template>
 

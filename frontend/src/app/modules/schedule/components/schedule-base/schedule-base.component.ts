@@ -68,11 +68,11 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
   }
 
   private mapGroupsToEvents(groups: Group[]) {
-    const semesterStart = '03.01.2021'
-    const semesterEnd = '06.22.2021'
     groups.forEach(group => {
-      const startDate = new Date(semesterStart);
-      const endDate = new Date(semesterEnd);
+      const startDate = new Date();
+      startDate.setMonth(group.startMonth - 1, group.startDay);
+      const endDate = new Date();
+      endDate.setMonth(group.endMonth, group.endDay);
       const week = moment(startDate).week() % 2;
       const dayOfWeek = group.dayID + 1;
       const weekType = group.weekTypeID - 1;
@@ -84,7 +84,7 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
       }
       while(startDate.getTime() <= endDate.getTime()) {
         const eventStartDate = new Date(startDate);
-        const eventEndDate = new Date(startDate);;
+        const eventEndDate = new Date(startDate);
         eventStartDate.setHours(group.startHour, group.startMinute);
         eventEndDate.setHours(group.endHour, group.endMinute);
         this.events.push({

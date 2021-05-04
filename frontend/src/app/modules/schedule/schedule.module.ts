@@ -26,6 +26,9 @@ registerLocaleData(localePl);
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+  ],
+  exports: [
+    ScheduleGroupPickerComponent
   ]
 })
 export class ScheduleModule { }

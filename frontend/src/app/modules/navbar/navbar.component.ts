@@ -21,7 +21,9 @@ export class NavbarComponent implements OnInit {
 
   getUserName(): string {
     const user = this.localStorageService.getUserData();
-    return `${user.name} ${user.surname}`;
+    if (user) {
+      return `${user.name} ${user.surname}`;
+    }
   }
 
   isUserLoggedIn(): boolean {

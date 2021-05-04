@@ -32,7 +32,6 @@ export class AuthService {
     return this.http.post(this.baseURL + 'login', body)
       .pipe(tap(
         res => {
-          console.log(res)
           this.storageService.setUserToken(res.token, rememberMe);
           const tokenPayload = this.jwtHelper.decodeToken(res.token);
           this.storageService.setUserID(tokenPayload.LecturerIdentifier, rememberMe);
