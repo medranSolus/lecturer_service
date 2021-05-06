@@ -25,7 +25,7 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Get()
         {
-            return Ok(dbCtx.Courses.Select(c => new Data.CourseShort(c)).ToArray());
+            return Ok(dbCtx.Courses.Include(c => c.Lecturer).Select(c => new Data.CourseShort(c)).ToArray());
         }
 
         [HttpGet]
@@ -33,7 +33,7 @@ namespace LecturerService.Controllers
         [Route("{courseId}")]
         public IActionResult Get(string courseId)
         {
-            Model.Course cs = dbCtx.Courses.Find(courseId);
+            Model.Course cs = dbCtx.Courses.Include(c => c.Lecturer).Find(courseId);
             if (cs == null)
                 return NotFound();
             return Ok(new Data.Course(cs));
