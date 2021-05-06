@@ -25,7 +25,7 @@ namespace LecturerService.Controllers
         [Authorize]
         public IActionResult Get()
         {
-            return Ok(dbCtx.Groups.Select(g => new Data.Group(g)).ToArray());
+            return Ok(dbCtx.Groups.Include(g => g.Course).Select(g => new Data.Group(g)).ToArray());
         }
 
         [HttpGet]
@@ -33,7 +33,7 @@ namespace LecturerService.Controllers
         [Route("{groupId}")]
         public IActionResult Get(string groupId)
         {
-            Model.Group gp = dbCtx.Groups.Find(groupId);
+            Model.Group gp = dbCtx.Groups.Include(g => g.Course).Find(groupId);
             if (gp == null)
                 return NotFound();
             return Ok(new Data.Group(gp));
@@ -47,7 +47,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            return Ok(dbCtx.Groups.Where(g => g.LecturerID == lc.ID).Select(g => new Data.Group(g)).ToArray());
+            return Ok(dbCtx.Groups.Where(g => g.LecturerID == lc.ID).Include(g => g.Course).Select(g => new Data.Group(g)).ToArray());
         }
 #endregion // GET
 
