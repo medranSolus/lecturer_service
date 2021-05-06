@@ -118,7 +118,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Group gp = dbCtx.Groups.Find(group.ID);
+            Model.Group gp = dbCtx.Groups.Include(g => g.Course).Find(group.ID);
             if (gp == null)
                 return NotFound();
             else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || !gp.Course.Accepted && gp.Course.LecturerID != lc.ID))
@@ -137,7 +137,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Group gp = dbCtx.Groups.Find(groupId);
+            Model.Group gp = dbCtx.Groups.Include(g => g.Course).Find(groupId);
             if (gp == null)
                 return NotFound();
             else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || !gp.Course.Accepted && gp.Course.LecturerID != lc.ID))
