@@ -34,7 +34,7 @@ namespace LecturerService.Controllers
         [Route("{courseId}")]
         public IActionResult Get(string courseId)
         {
-            Model.Course cs = dbCtx.Courses.Include(c => c.Lecturer).Find(courseId);
+            Model.Course cs = dbCtx.Courses.Include(c => c.Lecturer).FirstOrDefault(c => c.ID == courseId);
             if (cs == null)
                 return NotFound();
             return Ok(new Data.Course(cs));
