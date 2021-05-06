@@ -34,7 +34,7 @@ namespace LecturerService.Controllers
         [Route("{groupId}")]
         public IActionResult Get(string groupId)
         {
-            Model.Group gp = dbCtx.Groups.Include(g => g.Course).Find(groupId);
+            Model.Group gp = dbCtx.Groups.Include(g => g.Course).FirstOrDefault(g => g.ID == groupId);
             if (gp == null)
                 return NotFound();
             return Ok(new Data.Group(gp));
@@ -119,7 +119,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Group gp = dbCtx.Groups.Include(g => g.Course).Find(group.ID);
+            Model.Group gp = dbCtx.Groups.Include(g => g.Course).FirstOrDefault(g => g.ID == group.ID);
             if (gp == null)
                 return NotFound();
             else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || !gp.Course.Accepted && gp.Course.LecturerID != lc.ID))
@@ -138,7 +138,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Group gp = dbCtx.Groups.Include(g => g.Course).Find(groupId);
+            Model.Group gp = dbCtx.Groups.Include(g => g.Course).FirstOrDefault(g => g.ID == groupId);
             if (gp == null)
                 return NotFound();
             else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || !gp.Course.Accepted && gp.Course.LecturerID != lc.ID))
