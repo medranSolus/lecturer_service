@@ -1,0 +1,63 @@
+<div class="dialog-container">
+
+    <div class="header">
+      <h3>Informacje o kursie</h3>
+      <div class="close" (click)="exit()"></div>
+    </div>
+    
+    <form (ngSubmit)="create()" [formGroup]="form" mat-dialog-content>
+      <div>
+        <label id="name">Nazwa kursu:</label> 
+        <input type='text' class="form-control" aria-describedby="name" [formControl]="form.controls['Name']">
+      </div>
+      <div>
+        <label id="ID">ID kursu:</label> 
+        <input type='text' class="form-control" aria-describedby="ID" [formControl]="form.controls['ID']">
+      </div>
+      <div>
+        <label id="department">Wydział:</label>
+        <select class="form-select" aria-describedby="department" [formControl]="form.controls['DepartmentID']">
+          <option *ngFor="let department of departments; let i = index" [ngValue]=i>{{department}}</option>
+        </select>
+      </div>
+      <div>
+        <label id="type">Rodzaj zajęć:</label>
+        <select class="form-select" aria-describedby="type" [formControl]="form.controls['TypeID']">
+          <option *ngFor="let type of courseType; let i = index" [ngValue]=i>{{type}}</option>
+        </select>
+      </div>
+      <div>
+        <label id="lang">Język:</label>
+        <select class="form-select" aria-describedby="lang" [formControl]="form.controls['LanguageTypeID']">
+          <option [ngValue]="1">One</option>
+          <option [ngValue]="2">Two</option>
+          <option [ngValue]="3">Three</option>
+        </select>
+      </div>
+      <div>
+        <label id="ects">ECTS:</label>
+        <input type="number" class="form-control" aria-describedby="ects" value="0" min="0" max="30" [formControl]="form.controls['Ects']"> 
+      </div>
+      <div>
+        <label id="hoursUni">Liczba godzin na uczelni:</label>
+        <input type="number" class="form-control" aria-describedby="hoursUni" value="0" min="0" max="120" [formControl]="form.controls['HoursUniversity']">
+      </div>
+      <div>
+        <label id="hoursHome">Liczba godzin samodzielnej pracy:</label>
+        <input type="number" class="form-control" aria-describedby="hoursHome" value="0" min="0" max="1000" [formControl]="form.controls['HoursStudent']">
+      </div>
+      <div>
+        <label id="semester">Semestr:</label>
+        <select class="form-select" aria-describedby="semester" [formControl]="form.controls['SemesterTypeID']">
+          <option value="1">Letni</option>
+          <option value="2">Zimowy</option>
+        </select>
+      </div>
+      <div>
+        <label id="year">Rok:</label>
+        <input type="number" class="form-control" aria-describedby="year" value="2021" min="2010" max="2100" [formControl]="form.controls['Year']">
+      </div>
+      
+    </form>
+    <button class="dialog-button" (click)="create()">Zapisz</button>
+</div>

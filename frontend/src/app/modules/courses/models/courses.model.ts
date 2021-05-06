@@ -1,4 +1,4 @@
-import { serialize } from "cerialize";
+import { deserialize, serialize } from "cerialize";
 
 export const Departments = [
     'Wydział Architektury',
@@ -26,6 +26,35 @@ export class CourseListItem {
 }
 
 export class CourseShort {
+    @deserialize
+    id: string;
+
+    @deserialize
+    name: string;
+
+    @deserialize
+    departmentID: number;
+
+    @deserialize
+    lecturerID: string;
+
+    @deserialize
+    typeID: number;
+
+    @deserialize
+    courseGroup: string;
+}
+
+export const CourseType = [
+    'Inne',
+    'Wykład',
+    'Laboratoria',
+    'Ćwiczenia',
+    'Projekt',
+    'Seminarium'
+]
+
+export class Course {
     @serialize
     id: string;
 
@@ -44,12 +73,3 @@ export class CourseShort {
     @serialize
     courseGroup: string;
 }
-
-export const CourseType = [
-    'Inne',
-    'Wykład',
-    'Laboratoria',
-    'Ćwiczenia',
-    'Projekt',
-    'Seminarium'
-]

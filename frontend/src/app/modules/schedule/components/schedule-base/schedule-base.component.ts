@@ -90,7 +90,7 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
         this.events.push({
           start: eventStartDate,
           end: eventEndDate,
-          title: `${group.id}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()} `
+          title: `${group.courseName}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`
         });
         if(weekType !== -1) {
           startDate.setDate(startDate.getDate() + 14);
@@ -119,7 +119,7 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
       this.eventsSchedule.push({
         start: eventStartDate,
         end: eventEndDate,
-        title: `${group.id}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()} `
+        title: `${group.courseName}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`
       });
     })
   }

@@ -6,6 +6,9 @@ export class Group {
     
     @deserialize
     courseID: string
+
+    @deserialize
+    courseName: string
     
     @deserialize
     studentsCount: number

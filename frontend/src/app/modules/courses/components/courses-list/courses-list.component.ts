@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 import { CourseListItem, CourseShort, Departments } from '../../models/courses.model';
 import { CoursesService } from '../../services/courses.service';
 import { isEmpty } from 'lodash'
+import { MatDialog } from '@angular/material/dialog';
+import { CourseCreateComponent } from '../course-create/course-create.component';
 
 @Component({
   selector: 'app-courses-list',
@@ -13,7 +15,7 @@ export class CoursesListComponent implements OnInit, OnDestroy {
   courses$: Subscription;
   courseList: CourseListItem[] = [];
 
-  constructor(private coursesService: CoursesService) { }
+  constructor(private coursesService: CoursesService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getAllCourses();
@@ -21,6 +23,10 @@ export class CoursesListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.courses$.unsubscribe();
+  }
+
+  public createNewCourse() {
+    const dialogRef = this.dialog.open(CourseCreateComponent, { disableClose: true });
   }
 
   private getAllCourses() {
