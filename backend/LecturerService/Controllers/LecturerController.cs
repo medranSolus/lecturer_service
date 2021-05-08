@@ -89,6 +89,8 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null || lc.ID != lecturer.ID)
                 Unauthorized();
+            if (lc.RoleTypeID != Data.Role.Admin)
+                lecturer.RoleTypeID = lc.RoleTypeID;
             lc.Update(lecturer);
             dbCtx.SaveChanges();
             return Ok();
