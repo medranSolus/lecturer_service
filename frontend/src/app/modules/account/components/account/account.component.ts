@@ -62,11 +62,6 @@ export class AccountComponent implements OnInit {
           this.spinner.hide();
         }
       )
-      // this.courseService.addNewCourse(JSON.stringify(this.form.getRawValue()))
-      // .pipe(first())
-      // .subscribe(response => {
-      //   console.log(response)
-      // })
     }
   }
 
