@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Serialize } from 'cerialize';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { first } from 'rxjs/operators';
-import { Course, CourseType, Departments } from '../../models/courses.model';
+import { Lecturer } from 'src/app/modules/lecturers/models/lecturer.model';
+import { LecturerService } from 'src/app/modules/lecturers/services/lecturer.service';
+import { Course, CourseType, Departments, LanguageType } from '../../models/courses.model';
 import { CoursesService } from '../../services/courses.service';
 
 @Component({
@@ -24,14 +27,26 @@ export class CourseCreateComponent implements OnInit {
     HoursStudent: new FormControl(0, Validators.required),
     SemesterTypeID: new FormControl(0, Validators.required),
     Year: new FormControl(2021, Validators.required),
+    LecturerID: new FormControl('', Validators.required)
   });
   
   departments = Departments;
   courseType = CourseType;
+  language = LanguageType;
+  lecturers: Lecturer[];
 
-  constructor(public dialogRef: MatDialogRef<CourseCreateComponent>, private courseService: CoursesService) { }
+  constructor(
+    public dialogRef: MatDialogRef<CourseCreateComponent>, 
+    private courseService: CoursesService, 
+    private lecturerService: LecturerService,
+    private spinner: NgxSpinnerService,) { }
 
   ngOnInit(): void {
+    this.lecturerService.getAllLecturers()
+    .pipe(first())
+    .subscribe(lecturers => {
+      this.lecturers = lecturers;
+    })
   }
 
   exit(): void {
@@ -39,12 +54,20 @@ export class CourseCreateComponent implements OnInit {
   }
 
   create() {
-    this.courseService.addNewCourse(JSON.stringify(this.form.getRawValue()))
+    this.form.markAllAsTouched();
+    if (this.form.valid) {
+      this.spinner.show();
+      this.courseService.addNewCourse(JSON.stringify(this.form.getRawValue()))
       .pipe(first())
       .subscribe(response => {
-        console.log(response)
+        this.spinner.hide();
         this.dialogRef.close({});
-    })
+      })
+    }
+  }
+
+  isInvalid(control: AbstractControl) {
+    return control.invalid && control.touched;
   }
 
 }

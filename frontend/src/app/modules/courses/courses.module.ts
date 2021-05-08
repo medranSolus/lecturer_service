@@ -7,6 +7,7 @@ import { CoursesListComponent } from './components/courses-list/courses-list.com
 import { CoursesItemComponent } from './components/courses-item/courses-item.component';
 import { CourseCreateComponent } from './components/course-create/course-create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxSpinnerModule,
   ]
 })
 export class CoursesModule { }

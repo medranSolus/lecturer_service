@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, Subscription } from 'rxjs';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -85,6 +86,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private loadUser(rememberMe: boolean) {
     this.user$ = this.authService.loadUserData()
+      .pipe(first())
       .subscribe(user => {
         this.localStorageService.setUserData(user, rememberMe);
         this.spinner.hide();

@@ -73,3 +73,9 @@ export class Course {
     @serialize
     courseGroup: string;
 }
+
+export const LanguageType = [
+    'Polski',
+    'Angielski',
+    'Niemiecki'
+]

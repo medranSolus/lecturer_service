@@ -1,13 +1,16 @@
 <div class="container courses-list">
-  <h2>Lista kursów</h2>
+  <div class="header"> 
+    <h2>Lista kursów</h2>
+    <button class="btn btn-primary" (click)="createNewCourse()">Dodaj kurs</button>
+  </div>
   <h4>Znajdź interesujacy cię kurs</h4>
+
   <div class="accordion mt-5" id="accordionExample">
     <ng-container *ngFor="let course of courseList; let i = index">
       <app-courses-item [id]="i" [data]="course">
       </app-courses-item>
     </ng-container>
   </div>
-  <button (click)="createNewCourse()">Dodaj kurs</button>
 </div>
 
 

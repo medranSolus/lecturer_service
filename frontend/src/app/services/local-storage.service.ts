@@ -45,6 +45,16 @@ export class LocalStorageService {
     }
   }
 
+  updateUserData(user: Lecturer) {
+    const userSerialized = JSON.stringify(user);
+    if(sessionStorage.getItem('userData')) {
+      sessionStorage.setItem('userData', userSerialized);
+    }
+    else {
+      localStorage.setItem('userData', userSerialized);
+    }
+  }
+
   getUserData(): Lecturer {
     const userData = sessionStorage.getItem('userData') || localStorage.getItem('userData');
 

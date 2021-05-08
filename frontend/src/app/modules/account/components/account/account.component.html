@@ -1,0 +1,31 @@
+
+<div class="container">
+  <div class="header mt-5">
+    <h2>Moje dane</h2>
+  </div>
+  <div class="w-25">
+    <form  [formGroup]="form">
+      <div class="mb-2">
+        <label id="name">Imię:</label> 
+        <input type='text' class="form-control" aria-describedby="name" [formControl]="form.controls['Name']">
+      </div>
+      <div class="mb-2">
+        <label id="surname">Nazwisko:</label> 
+        <input type='text' class="form-control" aria-describedby="surname" [formControl]="form.controls['Surname']">
+      </div>
+      <div class="mb-2">
+        <label id="mail">E-mail:</label>
+        <input type='email' class="form-control" aria-describedby="mail" [formControl]="form.controls['Mail']">
+      </div>        
+    </form>
+  </div>
+  <div class="alert alert-danger" *ngIf="error">
+    Coś poszło nie tak, spróbuj ponownie później
+  </div>
+  <div class="alert alert-success" *ngIf="success">
+    Dane zaktualizowane
+  </div>
+  <button class="btn btn-primary mt-2 me-3" (click)="save()">Zapisz zmiany</button>
+  <a class="btn btn-outline-primary mt-2" routerLink="/change-password">Zmień hasło</a>
+</div>
+<ngx-spinner></ngx-spinner>

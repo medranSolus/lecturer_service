@@ -13,6 +13,7 @@ import { CoursesModule } from './modules/courses/courses.module';
 import { LecturersModule } from './modules/lecturers/lecturers.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AccountModule } from './modules/account/account.module';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CoursesModule,
     LecturersModule,
     ScheduleModule,
+    AccountModule,
     NgbModule
   ],
   providers: [
