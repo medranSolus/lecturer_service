@@ -5,6 +5,7 @@ namespace LecturerService.Data
         public string ID { get; set; }
         public string Pass { get; set; }
 
+        public Password() {}
         public Password(Model.Password pass)
         {
             ID = pass.ID;

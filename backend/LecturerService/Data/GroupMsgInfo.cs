@@ -5,6 +5,7 @@ namespace LecturerService.Data
         public long ID { get; set; }
         public Group Group { get; set; }
 
+        public GroupMsgInfo() {}
         public GroupMsgInfo(Model.GroupMsg msg)
         {
             ID = msg.ID;

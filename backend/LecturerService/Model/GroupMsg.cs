@@ -21,6 +21,11 @@ namespace LecturerService.Model
         public GroupMsg() {}
         public GroupMsg(Data.GroupMsg msg)
         {
+            Update(msg);
+        }
+
+        public void Update(Data.GroupMsg msg)
+        {
             ID = msg.ID;
             GroupID = msg.GroupID;
             LecturerID = msg.LecturerID;

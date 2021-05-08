@@ -16,6 +16,11 @@ namespace LecturerService.Model
         public CourseMsg() {}
         public CourseMsg(Data.CourseMsg msg)
         {
+            Update(msg);
+        }
+
+        public void Update(Data.CourseMsg msg)
+        {
             ID = msg.ID;
             CourseID = msg.CourseID;
         }

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -69,7 +67,6 @@ namespace LecturerService.Controllers
                     return Unauthorized();
                 dbCtx.Groups.Add(new Model.Group(group));
                 dbCtx.SaveChanges();
-                // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
             }
             return Conflict();
@@ -122,11 +119,10 @@ namespace LecturerService.Controllers
             Model.Group gp = dbCtx.Groups.Include(g => g.Course).FirstOrDefault(g => g.ID == group.ID);
             if (gp == null)
                 return NotFound();
-            else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || !gp.Course.Accepted && gp.Course.LecturerID != lc.ID))
+            else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || gp.Course.LecturerID != lc.ID))
                 return Unauthorized();
-            gp = new Model.Group(group);
+            gp.Update(group);
             dbCtx.SaveChanges();
-            // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
 
@@ -141,7 +137,7 @@ namespace LecturerService.Controllers
             Model.Group gp = dbCtx.Groups.Include(g => g.Course).FirstOrDefault(g => g.ID == groupId);
             if (gp == null)
                 return NotFound();
-            else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || !gp.Course.Accepted && gp.Course.LecturerID != lc.ID))
+            else if (lc.RoleTypeID != Data.Role.Admin && (gp.Course.Accepted || gp.Course.LecturerID != lc.ID))
                 return Unauthorized();
             dbCtx.Groups.Remove(gp);
             dbCtx.SaveChanges();

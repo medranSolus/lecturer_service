@@ -30,6 +30,11 @@ namespace LecturerService.Model
         public Lecturer() {}
         public Lecturer(Data.Lecturer lecturer)
         {
+            Update(lecturer);
+        }
+
+        public void Update(Data.Lecturer lecturer)
+        {
             ID = lecturer.ID;
             Name = lecturer.Name;
             Surname = lecturer.Surname;

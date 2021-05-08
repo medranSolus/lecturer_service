@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -56,7 +54,6 @@ namespace LecturerService.Controllers
                     course.Accepted = false;
                 dbCtx.Courses.Add(new Model.Course(course));
                 dbCtx.SaveChanges();
-                // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
             }
             return Conflict();
@@ -110,11 +107,10 @@ namespace LecturerService.Controllers
             Model.Course cs = dbCtx.Courses.Find(course.ID);
             if (cs == null)
                 return NotFound();
-            else if (lc.RoleTypeID != Data.Role.Admin && (cs.Accepted || !cs.Accepted && cs.LecturerID != lc.ID))
+            else if (lc.RoleTypeID != Data.Role.Admin && (cs.Accepted || cs.LecturerID != lc.ID))
                 return Unauthorized();
-            cs = new Model.Course(course);
+            cs.Update(course);
             dbCtx.SaveChanges();
-            // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
 
@@ -129,7 +125,7 @@ namespace LecturerService.Controllers
             Model.Course cs = dbCtx.Courses.Find(courseId);
             if (cs == null)
                 return NotFound();
-            else if (lc.RoleTypeID != Data.Role.Admin && (cs.Accepted || !cs.Accepted && cs.LecturerID != lc.ID))
+            else if (lc.RoleTypeID != Data.Role.Admin && (cs.Accepted || cs.LecturerID != lc.ID))
                 return Unauthorized();
             dbCtx.Courses.Remove(cs);
             dbCtx.SaveChanges();

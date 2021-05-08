@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -70,14 +69,13 @@ namespace LecturerService.Controllers
         {
             if (!Data.Security.IsAdmin(HttpContext, dbCtx))
                 return Unauthorized();
-            if (String.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
                 return BadRequest();
             if (dbCtx.Lecturers.Find(lecturer.ID) == null)
             {
                 dbCtx.Lecturers.Add(new Model.Lecturer(lecturer));
                 dbCtx.Passwords.Add(new Model.Password{ ID = lecturer.ID, Pass = Data.Security.GetHash(password) });
                 dbCtx.SaveChanges();
-                // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
                 return Ok();
             }
             return Conflict();
@@ -91,9 +89,8 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null || lc.ID != lecturer.ID)
                 Unauthorized();
-            lc = new Model.Lecturer(lecturer);
+            lc.Update(lecturer);
             dbCtx.SaveChanges();
-            // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
 
@@ -105,12 +102,11 @@ namespace LecturerService.Controllers
             Model.Lecturer caller = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (caller == null || caller.ID != password.ID)
                 return Unauthorized();
-            if (String.IsNullOrEmpty(password.Pass))
+            if (string.IsNullOrEmpty(password.Pass))
                 return BadRequest();
             Model.Password pass = dbCtx.Passwords.Find(password.ID);
             pass.Pass = Data.Security.GetHash(password.Pass);
             dbCtx.SaveChanges();
-            // Maybe check if correct save (no errors when adding model without all required fields on, etc, dunno)
             return Ok();
         }
 #endregion // PUT

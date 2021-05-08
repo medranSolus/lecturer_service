@@ -69,6 +69,11 @@ namespace LecturerService.Model
         public Group() {}
         public Group(Data.Group group)
         {
+            Update(group);
+        }
+
+        public void Update(Data.Group group)
+        {
             ID = group.ID;
             CourseID = group.CourseID;
             StudentsCount = group.StudentsCount;

@@ -13,6 +13,7 @@ namespace LecturerService.Data
         public string? CourseGroup { get; set; }
 #nullable disable
 
+        public CourseShort() {}
         public CourseShort(Model.Course course)
         {
             ID = course.ID;

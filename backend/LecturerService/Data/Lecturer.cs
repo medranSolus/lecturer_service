@@ -13,6 +13,7 @@ namespace LecturerService.Data
         public string? Title { get; set; }
 #nullable disable
 
+        public Lecturer() {}
         public Lecturer(Model.Lecturer lecturer)
         {
             ID = lecturer.ID;

@@ -58,6 +58,11 @@ namespace LecturerService.Model
         public Course() {}
         public Course(Data.Course course)
         {
+            Update(course);
+        }
+
+        public void Update(Data.Course course)
+        {
             ID = course.ID;
             Accepted = course.Accepted;
             Name = course.Name;
