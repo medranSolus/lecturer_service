@@ -19,5 +19,9 @@ export class LecturerService {
     return this.http.get<Lecturer>(this.baseURL + id);
   }
 
+  addNewLecturer(body: any, password: string) {
+    return this.http.post(this.baseURL + password, body);
+  }
+
   constructor(private http: HttpClient) { }
 }

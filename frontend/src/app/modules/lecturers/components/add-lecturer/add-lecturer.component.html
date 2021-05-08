@@ -1,0 +1,46 @@
+<div class="dialog-container">
+
+    <div class="header">
+      <h3>Dane użytkownika</h3>
+      <div class="close" (click)="exit()"></div>
+    </div>
+    
+    <form  [formGroup]="form">
+        <div class="mb-2">
+            <label id="id">ID:</label> 
+            <input type='text' class="form-control" aria-describedby="id" [ngClass]="{'is-invalid': isInvalid(form.controls['ID'])}" [formControl]="form.controls['ID']">
+        </div>
+        <div class="mb-2">
+          <label id="name">Imię:</label> 
+          <input type='text' class="form-control" aria-describedby="name" [ngClass]="{'is-invalid': isInvalid(form.controls['Name'])}" [formControl]="form.controls['Name']">
+        </div>
+        <div class="mb-2">
+          <label id="surname">Nazwisko:</label> 
+          <input type='text' class="form-control" aria-describedby="surname" [ngClass]="{'is-invalid': isInvalid(form.controls['Surname'])}" [formControl]="form.controls['Surname']">
+        </div>
+        <div class="mb-2">
+            <label id="title">Tytuł:</label> 
+            <input type='text' class="form-control" aria-describedby="title" [ngClass]="{'is-invalid': isInvalid(form.controls['Title'])}" [formControl]="form.controls['Title']">
+          </div>
+        <div class="mb-2">
+          <label id="mail">E-mail:</label>
+          <input type='email' class="form-control" aria-describedby="mail" [ngClass]="{'is-invalid': isInvalid(form.controls['Mail'])}" [formControl]="form.controls['Mail']">
+        </div>  
+        <div class="mb-2">
+            <label id="phone">Nr. telefonu:</label>
+            <input type='tel' class="form-control" aria-describedby="phone" [ngClass]="{'is-invalid': isInvalid(form.controls['Phone'])}" [formControl]="form.controls['Phone']">
+          </div>   
+        <div class="mb-2">
+            <label for="role" class="form-label">Uprawnienia:</label>
+            <input type="number" class="form-control" list="datalistOptions" placeholder="Uprawnienia" [ngClass]="{'is-invalid': isInvalid(form.controls['RoleTypeID'])}" [formControl]="form.controls['RoleTypeID']">
+            <datalist id="datalistOptions">
+              <option *ngFor="let role of roles; let i = index" [value]=i>{{role}}</option>
+            </datalist>
+        </div>   
+        <div class="mb-2">
+            <label id="pass">Hasło:</label>
+            <input type='password' class="form-control" aria-describedby="pass" [ngClass]="{'is-invalid': isInvalid(password)}" [formControl]="password">
+        </div> 
+    </form>
+    <button class="btn btn-outline-primary mt-2" (click)="create()">Dodaj</button>
+</div>

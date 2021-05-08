@@ -27,3 +27,8 @@ export class Lecturer {
     @deserialize
     title: string;
 }
+
+export const Roles = [
+    'Admin',
+    'Zwykły użytkownik'
+]

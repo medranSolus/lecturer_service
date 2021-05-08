@@ -14,7 +14,7 @@
                         </mat-form-field>
                         <mat-form-field appearance="fill">
                             <mat-label>Hasło</mat-label>
-                            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" minlength="4" maxlength="32" [formControl]="form.controls['password']" required>
+                            <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" minlength="0" maxlength="32" [formControl]="form.controls['password']" required>
                             <mat-error *ngIf="form.controls['password'].invalid">{{getPasswordErrorMessage()}}</mat-error>
                         </mat-form-field>
                         <div class="alert alert-danger" *ngIf="loginError">
