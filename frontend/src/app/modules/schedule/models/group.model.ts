@@ -51,4 +51,7 @@ export class Group {
 
     @deserialize
     startMonth: number
+
+    @deserialize
+    courseTypeID: number
 }

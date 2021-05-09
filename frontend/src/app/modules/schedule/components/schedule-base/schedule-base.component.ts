@@ -11,6 +11,8 @@ import { CustomDateFormatter } from '../../providers/custom-date-formatter.provi
 import { ScheduleService } from '../../services/schedule.service';
 import { Group } from '../../models/group.model';
 import { isEmpty } from 'lodash';
+import { Colors } from '../../models/constants.model';
+import { CourseType } from 'src/app/modules/courses/models/courses.model';
 @Component({
   selector: 'app-schedule-base',
   templateUrl: './schedule-base.component.html',
@@ -38,6 +40,9 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
   events: CalendarEvent[] = [];
   eventsSchedule: CalendarEvent[] = [];
   activeDayIsOpen: boolean = true;
+  emptyData = false;
+
+  courseTypes = CourseType;
 
   constructor(private scheduleService: ScheduleService) {}
 
@@ -57,8 +62,12 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
     if(isEmpty(this.groups)) {
       this.groups$ = this.scheduleService.getGroupsAssignedToLoggedUser()
       .subscribe(groups => {
+        if (isEmpty(groups)) {
+          this.emptyData = true
+        }
         this.mapGroupsToEvents(groups);
         this.mapGroupsToScheduleEvents(groups);
+
       })
     }
     else {
@@ -90,7 +99,8 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
         this.events.push({
           start: eventStartDate,
           end: eventEndDate,
-          title: `${group.courseName}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`
+          title: `${group.courseName}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`,
+          color: Colors[group.courseTypeID]
         });
         if(weekType !== -1) {
           startDate.setDate(startDate.getDate() + 14);
@@ -119,7 +129,8 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
       this.eventsSchedule.push({
         start: eventStartDate,
         end: eventEndDate,
-        title: `${group.courseName}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`
+        title: `${group.courseName}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`,
+        color: Colors[group.courseTypeID]
       });
     })
   }

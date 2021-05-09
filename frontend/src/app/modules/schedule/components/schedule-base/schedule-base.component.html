@@ -63,6 +63,14 @@
                           [weekStartsOn]="weekStartsOn"
                           [weekendDays]="weekendDays">
   </mwl-calendar-week-view>
+  <div class="schedule-legend">
+    <div class="course other">Inne</div>
+    <div class="course lecture">Wykład</div>
+    <div class="course lab">Laboratoria</div>
+    <div class="course exercise">Ćwiczenia</div>
+    <div class="course project">Projekt</div>
+    <div class="course seminar">Seminarium</div>
+  </div>
 </div>
 
 <ng-template #customHeaderTemplate
@@ -89,7 +97,7 @@
 </ng-template>
 
 <ng-template #noData>
-  <div class="alert alert-warning">
+  <div *ngIf="emptyData" class="alert alert-warning">
     Nie prowadzisz jeszcze żadnych zajęć!
   </div>
 </ng-template>

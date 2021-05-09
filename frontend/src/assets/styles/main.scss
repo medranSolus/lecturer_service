@@ -209,6 +209,44 @@ span {
     text-overflow: ellipsis;
 }
 
+.schedule-legend {
+    display: flex;
+    width: auto;
+    margin: 10px;
+}
+
+.course {
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    border-radius: 3px;
+    margin: 3px;
+}
+
+.other {
+    background-color: #ccc1ec;
+}
+
+.lecture {
+    background-color: #f3b6b7;
+}
+
+.lab {
+    background-color: #a5c4f7;
+}
+
+.exercise {
+    background-color: #aeed91;
+}
+
+.project {
+    background-color: #efbcf0;
+}
+
+.seminar {
+    background-color: #f5dcc0;
+}
+
 /* ******************** Dialog ************************* */
 .header {
     display: flex;
