@@ -56,8 +56,8 @@ namespace LecturerService.Controllers
         {
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc != null && lc.ID == lecturerId)
-                return Ok(dbCtx.GroupNotification.Where(msg => msg.LecturerID == lecturerId)
-                    .Include(msg => msg.Group).Include(msg => msg.Group.Course).Select(msg => new Data.GroupMsgInfo(msg)).ToArray());
+                return Ok(dbCtx.GroupNotification.Include(msg => msg.Group).Include(msg => msg.Group.Course)
+                    .Where(msg => msg.Group.Course.LecturerID == lecturerId).Select(msg => new Data.GroupMsgInfo(msg)).ToArray());
             return Unauthorized();
         }
 #endregion // GET

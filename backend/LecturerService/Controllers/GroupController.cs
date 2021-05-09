@@ -95,7 +95,7 @@ namespace LecturerService.Controllers
             else if (gp.Course.LecturerID != lc.ID && lc.RoleTypeID != Data.Role.Admin)
                 return Unauthorized();
             gp.LecturerID = msg.LecturerID;
-            dbCtx.GroupNotification.Remove(gpMsg);
+            dbCtx.GroupNotification.RemoveRange(dbCtx.GroupNotification.Where(m => m.GroupID == msg.GroupID));
             dbCtx.SaveChanges();
             return Ok();
         }
