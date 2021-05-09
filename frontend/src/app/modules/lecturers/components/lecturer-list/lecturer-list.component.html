@@ -8,38 +8,38 @@
             <tr>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="lecturer1" placeholder="Tytuł">
+                        <input type="text" class="form-control" id="lecturer1" placeholder="Tytuł" (input)="filterByTitle($event.target.value)">
                         <label for="lecturer1">Tytuł</label>
                     </div>
                 </th>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="lecturer2" placeholder="Imię">
+                        <input type="text" class="form-control" id="lecturer2" placeholder="Imię" (input)="filterByName($event.target.value)">
                         <label for="lecturer2">Imię</label>
                     </div>
                 </th>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="lecturer3" placeholder="Nazwisko">
+                        <input type="text" class="form-control" id="lecturer3" placeholder="Nazwisko" (input)="filterBySurname($event.target.value)">
                         <label for="lecturer3">Nazwisko</label>
                     </div>
                 </th>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="lecturer4" placeholder="Wydział">
+                        <input type="text" class="form-control" id="lecturer4" placeholder="Wydział" (input)="filterByMail($event.target.value)">
                         <label for="lecturer4">E-mail</label>
                     </div>
                 </th>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="lecturer5" placeholder="Katedra">
+                        <input type="text" class="form-control" id="lecturer5" placeholder="Katedra" (input)="filterByPhone($event.target.value)">
                         <label for="lecturer5">Nr. telefonu</label>
                     </div>
                 </th>
             </tr>
         </thead>
-        <tbody *ngIf="lecturers$ | async as lecturers">
-            <tr *ngFor="let lecturer of lecturers">
+        <tbody *ngIf="lecturers">
+            <tr *ngFor="let lecturer of filteredData">
                 <td>{{lecturer.title}}</td>
                 <td>{{lecturer.name}}</td>
                 <td>{{lecturer.surname}}</td>

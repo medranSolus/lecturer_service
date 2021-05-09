@@ -41,7 +41,6 @@ export class AddLecturerComponent implements OnInit {
   create() {
     this.form.markAllAsTouched()
     this.password.markAsTouched();
-    console.log(this.form)
     if (this.form.valid && this.password.valid) {
       this.spinner.show();
       const lecturer = JSON.stringify(this.form.getRawValue());
@@ -52,18 +51,20 @@ export class AddLecturerComponent implements OnInit {
           this.error = false;
           this.success = true;
           this.spinner.hide();
+          this.exit(true)
         },
         error => {
           this.error = true;
           this.success = false;
           this.spinner.hide();
+          this.exit(false)
         }
       )
     }
   }
 
-  exit(): void {
-    this.dialogRef.close();
+  exit(success: boolean): void {
+    this.dialogRef.close({success: success});
   }
 
   isInvalid(control: AbstractControl) {
