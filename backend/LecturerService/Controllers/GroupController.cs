@@ -88,7 +88,7 @@ namespace LecturerService.Controllers
             Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
             if (lc == null)
                 return Unauthorized();
-            Model.Group gp = dbCtx.Groups.Find(msg.GroupID);
+            Model.Group gp = dbCtx.Groups.Include(g => g.Course).FirstOrDefault(g => g.ID == msg.GroupID);
             Model.GroupMsg gpMsg = dbCtx.GroupNotification.Find(msg.ID);
             if (gp == null || gpMsg == null)
                 return NotFound();
