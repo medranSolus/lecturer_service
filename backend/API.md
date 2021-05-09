@@ -38,6 +38,9 @@ Authentication method based on JWT passed in header named **Authorization: Beare
     - return:
       - OK 200: [ Data.Group ]
       - Unauthorized 401: user not found
+  - *group/course/COURSE_ID* - get all groups associated with course
+    - return:
+      - OK 200: [ Data.Group ]
 
 ### POST
   - *login* - generate JWT token (JWT not required)

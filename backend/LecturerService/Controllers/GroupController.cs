@@ -48,9 +48,17 @@ namespace LecturerService.Controllers
                 return Unauthorized();
             return Ok(dbCtx.Groups.Where(g => g.LecturerID == lc.ID).Include(g => g.Course).Select(g => new Data.Group(g)).ToArray());
         }
+
+        [HttpGet]
+        [Authorize]
+        [Route("course/{courseId}")]
+        public IActionResult GetCourse(string courseId)
+        {
+            return Ok(dbCtx.Groups.Where(g => g.CourseID == courseId).Include(g => g.Course).Select(g => new Data.Group(g)).ToArray());
+        }
 #endregion // GET
 
-#region POST
+        #region POST
         [HttpPost]
         [Authorize]
         public IActionResult Post([FromBody]Data.Group group)
