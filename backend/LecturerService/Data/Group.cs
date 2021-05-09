@@ -27,7 +27,7 @@ namespace LecturerService.Data
 #nullable enable
         public string? LecturerID { get; set; }
         public string? CourseName { get; set; }
-        public CourseType CourseTypeID { get; set; }
+        public CourseType? CourseTypeID { get; set; }
 #nullable disable
 
         public Group() {}
