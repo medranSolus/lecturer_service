@@ -27,6 +27,7 @@ namespace LecturerService.Data
 #nullable enable
         public string? LecturerID { get; set; }
         public string? CourseName { get; set; }
+        public CourseType CourseTypeID { get; set; }
 #nullable disable
 
         public Group() {}
@@ -49,6 +50,7 @@ namespace LecturerService.Data
             EndMinute = group.EndMinute;
             LecturerID = group.LecturerID;
             CourseName = group.Course.Name;
+            CourseTypeID = group.Course.TypeID;
         }
     }
 }
