@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -57,6 +58,33 @@ namespace LecturerService.Controllers
                 return Ok();
             }
             return Conflict();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("batch")]
+        public IActionResult PostBatch([FromBody]IEnumerable<Data.Course> courses)
+        {
+            Model.Lecturer lc = Data.Security.GetLecturer(HttpContext, dbCtx);
+            if (lc == null || lc.RoleTypeID != Data.Role.Admin)
+                return Unauthorized();
+            List<int> overlaps = new();
+            for (int i = 0; i < courses.Count(); ++i)
+            {
+                var course = courses.ElementAt(i);
+                if (dbCtx.Courses.Find(course.ID) == null)
+                {
+                    if (course.LecturerID == null)
+                        course.LecturerID = lc.ID;
+                    dbCtx.Courses.Add(new Model.Course(course));
+                }
+                else
+                    overlaps.Add(i + 1);
+            }
+            dbCtx.SaveChanges();
+            if (overlaps.Count == 0)
+                return Ok();
+            return Conflict(overlaps);
         }
 
         [HttpPost]

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -58,7 +59,7 @@ namespace LecturerService.Controllers
         }
 #endregion // GET
 
-        #region POST
+#region POST
         [HttpPost]
         [Authorize]
         public IActionResult Post([FromBody]Data.Group group)
@@ -78,6 +79,34 @@ namespace LecturerService.Controllers
                 return Ok();
             }
             return Conflict();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("batch")]
+        public IActionResult PostBatch([FromBody]IEnumerable<Data.Group> groups)
+        {
+            if (!Data.Security.IsAdmin(HttpContext, dbCtx))
+                return Unauthorized();
+            List<KeyValuePair<int, bool>> overlaps = new();
+            for (int i = 0; i < groups.Count(); ++i)
+            {
+                var group = groups.ElementAt(i);
+                if (dbCtx.Groups.Find(group.ID) == null)
+                {
+                    Model.Course cs = dbCtx.Courses.Find(group.CourseID);
+                    if (cs == null)
+                        overlaps.Add(new(i + 1, true));
+                    else
+                        dbCtx.Groups.Add(new Model.Group(group));
+                }
+                else
+                    overlaps.Add(new(i + 1, false));
+            }
+            dbCtx.SaveChanges();
+            if (overlaps.Count == 0)
+                return Ok();
+            return Conflict(overlaps);
         }
 
         [HttpPost]

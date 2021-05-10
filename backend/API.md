@@ -61,6 +61,12 @@ Authentication method based on JWT passed in header named **Authorization: Beare
       - OK 200: course added
       - Unauthorized 401: user don't exist
       - Conflict 409: course already exists
+  - *course/batch* - add new courses (admin only)
+    - body: [ Data.Course ]
+    - return:
+      - OK 200: all courses added
+      - Unauthorized 401: user not an admin
+      - Conflict 409: [ int ] some courses already exists, with rows returned
   - *course/accept* - accept pending course (admin only)
     - body: Data.CourseMsg
     - return:
@@ -80,6 +86,12 @@ Authentication method based on JWT passed in header named **Authorization: Beare
       - BadRequest 400: group course not found
       - Unauthorized 401: user is not an owner of a course or admin
       - Conflict 409: group already exists
+  - *group/batch* - add new groups (admin only)
+    - body: [ Data.Group ]
+    - return:
+      - OK 200: all groups added
+      - Unauthorized 401: user not an admin
+      - Conflict 409: [ { int, bool } ] some courses already exists or error occured (CourseID was not found), with rows returned and state of error (true)
   - *group/accept* - accept request for signing into course group
     - body: Data.GroupMsg
     - return:
