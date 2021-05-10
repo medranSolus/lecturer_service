@@ -41,6 +41,13 @@ Authentication method based on JWT passed in header named **Authorization: Beare
   - *group/course/COURSE_ID* - get all groups associated with course
     - return:
       - OK 200: [ Data.Group ]
+  - *semester* - get all semester IDs
+    - return:
+      - OK 200: [ string ]
+  - *semester/SEMESTER_ID* - get single semester
+    - return:
+      - OK 200: [ Model.Semester ]
+      - NotFound 404: SEMESTER_ID not found
 
 ### POST
   - *login* - generate JWT token (JWT not required)
@@ -103,6 +110,12 @@ Authentication method based on JWT passed in header named **Authorization: Beare
       - OK 200: request added
       - Unauthorized 401: user don't exist
       - NotFound 404: group not found
+  - *semester* - add new semester (admin only)
+    - body: Model.Semester
+    - return:
+      - OK 200: semester added
+      - Unauthorized 401: user not an admin
+      - Conflict 409: semester already exists
 
 ### PUT
   - *lecturer* - update lecturer data
@@ -128,6 +141,12 @@ Authentication method based on JWT passed in header named **Authorization: Beare
       - OK 200: group updated
       - Unauthorized 401: user don't exist or user is not an owner of a group course (must be admin otherwise)
       - NotFound 404: group not found
+  - *semester* - update semester data (admin only)
+    - body: Model.Semester
+    - return:
+      - OK 200: semester updated
+      - Unauthorized 401: user not an admin
+      - NotFound 404: semester not found
 
 ### DELETE
   - *lecturer/LECTURER_ID* - delete lecturer (admin only)

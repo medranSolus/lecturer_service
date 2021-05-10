@@ -2,8 +2,6 @@ namespace LecturerService.Data
 {
     public enum Role : byte { Admin = 0, Normal = 1 }
 
-    public enum Semester : byte { Winter = 0, Summer = 1 }
-
     public enum Lang : byte
     {
         Polish = 0,

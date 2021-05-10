@@ -10,6 +10,7 @@ namespace LecturerService.Model
         public DbSet<Group> Groups { get; set; }
         public DbSet<Lecturer> Lecturers { get; set; }
         public DbSet<Password> Passwords { get; set; }
+        public DbSet<Semester> Semesters { get; set; }
 
         public LSContext(DbContextOptions<LSContext> options): base(options) {}
     }

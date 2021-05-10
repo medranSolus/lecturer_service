@@ -13,7 +13,7 @@ namespace LecturerService.Data
         public byte Ects { get; set; }
         public byte HoursUniversity { get; set; }
         public byte HoursStudent { get; set; }
-        public Semester SemesterTypeID { get; set; }
+        public string SemesterID { get; set; }
         public uint Year { get; set; }
 #endregion // Basic info
 
@@ -35,7 +35,7 @@ namespace LecturerService.Data
             Ects = course.Ects;
             HoursUniversity = course.HoursUniversity;
             HoursStudent = course.HoursStudent;
-            SemesterTypeID = course.SemesterTypeID;
+            SemesterID = course.SemesterID;
             Year = course.Year;
             LecturerID = course.LecturerID;
             if (LecturerID != null)

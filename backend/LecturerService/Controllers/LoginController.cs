@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
@@ -16,13 +15,11 @@ namespace LecturerService.Controllers
     {
         readonly IConfiguration config;
         readonly Model.LSContext dbCtx;
-        readonly ILogger<LoginController> logger;
 
-        public LoginController(IConfiguration configuration, Model.LSContext database, ILogger<LoginController> log)
+        public LoginController(IConfiguration configuration, Model.LSContext database)
         {
             config = configuration;
             dbCtx = database;
-            logger = log;
         }
         
         [HttpPost]

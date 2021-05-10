@@ -40,8 +40,8 @@ namespace LecturerService.Model
 
         [ForeignKey("Semester")]
         [Required(ErrorMessage = "Must specify semester of course!")]
-        public Data.Semester SemesterTypeID { get; set; }
-        public EnumTab.Semester Semester { get; set; }
+        public string SemesterID { get; set; }
+        public Semester Semester { get; set; }
         
         [Required(ErrorMessage = "Must specify year of course!")]
         public uint Year { get; set; }
@@ -72,7 +72,7 @@ namespace LecturerService.Model
             Ects = course.Ects;
             HoursUniversity = course.HoursUniversity;
             HoursStudent = course.HoursStudent;
-            SemesterTypeID = course.SemesterTypeID;
+            SemesterID = course.SemesterID;
             Year = course.Year;
             LecturerID = course.LecturerID;
             CourseGroup = course.CourseGroup;

@@ -1,7 +1,5 @@
-using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,12 +10,10 @@ namespace LecturerService.Controllers
     public class LecturerController : ControllerBase
     {
         readonly Model.LSContext dbCtx;
-        readonly ILogger<LecturerController> logger;
 
-        public LecturerController(Model.LSContext database, ILogger<LecturerController> log)
+        public LecturerController(Model.LSContext database)
         {
             dbCtx = database;
-            logger = log;
         }
 
 #region GET
