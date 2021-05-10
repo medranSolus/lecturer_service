@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { Group } from '../../models/group.model';
 import { ScheduleService } from '../../services/schedule.service';
+import { CreateGroupComponent } from '../create-group/create-group.component';
 
 @Component({
   selector: 'app-schedule-group-picker',
@@ -11,21 +13,38 @@ import { ScheduleService } from '../../services/schedule.service';
 export class ScheduleGroupPickerComponent implements OnInit {
 
   groups: Group[];
+  id: string;
 
   constructor (
     private route: ActivatedRoute,
-    private scheduleService: ScheduleService) {
+    private scheduleService: ScheduleService,
+    public dialog: MatDialog) {
   
   }
 
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('courseID');
-    this.scheduleService.getGroupsAssignedtoCourse(id)
+    this.id = this.route.snapshot.paramMap.get('courseID');
+    this.scheduleService.getGroupsAssignedtoCourse(this.id)
       .pipe(first())
       .subscribe(groups => {
         this.groups = groups.filter(group => !group.lecturerID);
       })
   }
 
+  createNewGroup() {
+    const dialogRef = this.dialog.open(CreateGroupComponent, { disableClose: true, data: {courseID: this.id} });
+    dialogRef.afterClosed()
+    .pipe(first())
+    .subscribe(result => {
+      if (result) {
+        this.groups = []
+        this.scheduleService.getGroupsAssignedtoCourse(this.id)
+        .pipe(first())
+        .subscribe(groups => {
+          this.groups = groups.filter(group => !group.lecturerID);
+        })
+      }
+    })
+  }
 }

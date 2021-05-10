@@ -27,5 +27,9 @@ export class ScheduleService {
     return this.http.post(this.baseURL + id, {})
   }
 
+  createNewGroup(body) {
+    return this.http.post(this.baseURL, body)
+  }
+
   constructor(private http: HttpClient) { }
 }

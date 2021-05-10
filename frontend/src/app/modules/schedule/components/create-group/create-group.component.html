@@ -1,0 +1,61 @@
+<div class="dialog-container">
+
+    <div class="header">
+      <h3>Dane grupy</h3>
+      <div class="close" (click)="exit(false)"></div>
+    </div>
+    
+    <form  [formGroup]="form">
+        <div class="mb-2">
+            <label id="id">ID:</label> 
+            <input type='text' class="form-control" aria-describedby="id" [ngClass]="{'is-invalid': isInvalid(form.controls['ID'])}" [formControl]="form.controls['ID']">
+        </div>
+        <div class="mb-2">
+          <label id="students">Liczba studentów:</label> 
+          <input type='number' class="form-control" aria-describedby="students" [ngClass]="{'is-invalid': isInvalid(form.controls['StudentsCount'])}" [formControl]="form.controls['StudentsCount']">
+        </div>
+        <div class="mb-2">
+          <label id="Room">Sala:</label> 
+          <input type='text' class="form-control" aria-describedby="Room" [ngClass]="{'is-invalid': isInvalid(form.controls['Room'])}" [formControl]="form.controls['Room']">
+        </div>
+        <div class="mb-2">
+            <label id="Building">Budynek:</label> 
+            <input type='text' class="form-control" aria-describedby="Building" [ngClass]="{'is-invalid': isInvalid(form.controls['Building'])}" [formControl]="form.controls['Building']">
+        </div>
+        <div class="mb-2">
+          <label id="WeekTypeID">Rodzaj tygodnia:</label>
+          <select class="form-select" [ngClass]="{'is-invalid': isInvalid(form.controls['WeekTypeID'])}" [formControl]="form.controls['WeekTypeID']">
+            <option [ngValue]=0>Wszystkie</option>
+            <option [ngValue]=1>Parzyste</option>
+            <option [ngValue]=2>Nieparzyste</option>
+          </select>
+        </div> 
+        <div class="mb-2">
+            <label id="DayID">Dzień:</label>
+            <select class="form-select" [ngClass]="{'is-invalid': isInvalid(form.controls['DayID'])}" [formControl]="form.controls['DayID']">
+              <option [ngValue]=0>Poniedziałek</option>
+              <option [ngValue]=1>Wtorek</option>
+              <option [ngValue]=2>Środa</option>
+              <option [ngValue]=3>Czwartek</option>
+              <option [ngValue]=4>Piątek</option>
+            </select>
+        </div>
+        <div class="mb-2">
+            <label id="StartHour">Godzina rozpoczęcia:</label> 
+            <input type='number' class="form-control" aria-describedby="StartHour" min="7" max="20" [ngClass]="{'is-invalid': isInvalid(form.controls['StartHour'])}" [formControl]="form.controls['StartHour']">
+        </div>
+        <div class="mb-2">
+            <label id="StartMinute">Minuta rozpoczęcia:</label> 
+            <input type='number' class="form-control" aria-describedby="StartMinute" min="0" max="59" [ngClass]="{'is-invalid': isInvalid(form.controls['StartMinute'])}" [formControl]="form.controls['StartMinute']">
+        </div>
+        <div class="mb-2">
+            <label id="EndHour">Godzina końca:</label> 
+            <input type='number' class="form-control" aria-describedby="EndHour" min="7" max="20" [ngClass]="{'is-invalid': isInvalid(form.controls['EndHour'])}" [formControl]="form.controls['EndHour']">
+        </div>
+        <div class="mb-2">
+            <label id="EndMinute">Minuta końca:</label> 
+            <input type='number' class="form-control" aria-describedby="EndMinute" min="0" max="59" [ngClass]="{'is-invalid': isInvalid(form.controls['EndMinute'])}" [formControl]="form.controls['EndMinute']">
+        </div>
+    </form>
+    <button class="btn btn-outline-primary mt-2" (click)="create()">Dodaj</button>
+</div>
