@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { Group } from '../../models/group.model';
 import { ScheduleService } from '../../services/schedule.service';
 import { CreateGroupComponent } from '../create-group/create-group.component';
@@ -18,7 +19,8 @@ export class ScheduleGroupPickerComponent implements OnInit {
   constructor (
     private route: ActivatedRoute,
     private scheduleService: ScheduleService,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    private localStorageService: LocalStorageService) {
   
   }
 
@@ -46,5 +48,9 @@ export class ScheduleGroupPickerComponent implements OnInit {
         })
       }
     })
+  }
+
+  isAdmin() {
+    return this.localStorageService.getUserData().roleTypeID === 0;
   }
 }

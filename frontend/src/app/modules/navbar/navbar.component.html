@@ -3,7 +3,7 @@
     <div class="navbar-links">
         <a routerLink="/schedule" [ngClass]="{'active-link': isCurrentRoute('/schedule')}" class="navbar-item link-item" >Twój plan</a> 
         <a routerLink="/courses" [ngClass]="{'active-link': isCurrentRoute('/courses')}" class="navbar-item link-item" >Lista kursów</a> 
-        <a routerLink="/lecturers" [ngClass]="{'active-link': isCurrentRoute('/lecturers')}" class="navbar-item link-item" >Lista prowadzących</a>
+        <a *ngIf="isAdmin()" routerLink="/lecturers" [ngClass]="{'active-link': isCurrentRoute('/lecturers')}" class="navbar-item link-item" >Lista prowadzących</a>
         <a routerLink="/groups" [ngClass]="{'active-link': isCurrentRoute('/groups')}" class="navbar-item link-item" >Grupy</a> 
     </div> 
     <div class="navbar-item item-right">

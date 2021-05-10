@@ -1,7 +1,7 @@
 <div class="container courses-list">
   <div class="header"> 
     <h2>Lista kursów</h2>
-    <button class="btn btn-primary" (click)="createNewCourse()">Dodaj kurs</button>
+    <button *ngIf="isAdmin()" class="btn btn-primary" (click)="createNewCourse()">Dodaj kurs</button>
   </div>
   <h4>Znajdź interesujacy cię kurs</h4>
 

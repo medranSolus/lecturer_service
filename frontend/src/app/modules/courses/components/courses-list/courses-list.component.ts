@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash'
 import { MatDialog } from '@angular/material/dialog';
 import { CourseCreateComponent } from '../course-create/course-create.component';
 import { first } from 'rxjs/operators';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-courses-list',
@@ -16,7 +17,7 @@ export class CoursesListComponent implements OnInit, OnDestroy {
   courses$: Subscription;
   courseList: CourseListItem[] = [];
 
-  constructor(private coursesService: CoursesService, public dialog: MatDialog) { }
+  constructor(private coursesService: CoursesService, public dialog: MatDialog, private localStorageService: LocalStorageService) { }
 
   ngOnInit(): void {
     this.getAllCourses();
@@ -55,6 +56,10 @@ export class CoursesListComponent implements OnInit, OnDestroy {
         this.courseList.push({departmentID: i, departmentName: Departments[i], courses: coursesByDepartment});
       }
     }
+  }
+
+  isAdmin() {
+    return this.localStorageService.getUserData().roleTypeID === 0;
   }
 
 }

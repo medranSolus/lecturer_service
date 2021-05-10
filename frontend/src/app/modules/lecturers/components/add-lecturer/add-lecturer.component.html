@@ -32,11 +32,10 @@
           </div>   
         <div class="mb-2">
             <label for="role" class="form-label">Uprawnienia:</label>
-            <input type="number" class="form-control" list="datalistOptions" placeholder="Uprawnienia" [ngClass]="{'is-invalid': isInvalid(form.controls['RoleTypeID'])}" [formControl]="form.controls['RoleTypeID']">
-            <datalist id="datalistOptions">
-              <option *ngFor="let role of roles; let i = index" [value]=i>{{role}}</option>
-            </datalist>
-        </div>   
+            <select class="form-select" [ngClass]="{'is-invalid': isInvalid(form.controls['RoleTypeID'])}" [formControl]="form.controls['RoleTypeID']">
+              <option *ngFor="let role of roles; let i = index" [ngValue]=i>{{role}}</option>
+            </select>
+        </div>
         <div class="mb-2">
             <label id="pass">Hasło:</label>
             <input type='password' class="form-control" aria-describedby="pass" [ngClass]="{'is-invalid': isInvalid(password)}" [formControl]="password">

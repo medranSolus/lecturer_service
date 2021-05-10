@@ -1,7 +1,7 @@
 <div class="container mt-5">
     <div class="header">
         <h2>Zapisy</h2>
-        <button class="btn btn-primary" (click)="createNewGroup()">Dodaj grupę</button>
+        <button *ngIf="isAdmin()" class="btn btn-primary" (click)="createNewGroup()">Dodaj grupę</button>
     </div>
     
     <h4>Kliknij interesującą cię grupę na planie, aby zgłosić chęć prowadzenia</h4>

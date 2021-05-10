@@ -47,8 +47,8 @@
       <div class="mb-2">
         <label id="semester">Semestr:</label>
         <select class="form-select" aria-describedby="semester" [formControl]="form.controls['SemesterTypeID']">
-          <option value="0">Zimowy</option>
-          <option value="1">Letni</option>
+          <option [ngValue]=0>Zimowy</option>
+          <option [ngValue]=1>Letni</option>
         </select>
       </div>
       <div class="mb-2">

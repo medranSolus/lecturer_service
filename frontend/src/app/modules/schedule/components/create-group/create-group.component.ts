@@ -40,7 +40,7 @@ export class CreateGroupComponent implements OnInit {
       DayID: new FormControl(0, Validators.required),
       StartHour: new FormControl(9, [Validators.min(7), Validators.max(21), Validators.required]),
       StartMinute: new FormControl(15, [Validators.min(0), Validators.max(60), Validators.required]),
-      EndHour: new FormControl(11, [Validators.min(7), Validators.max(22), Validators.required]),
+      EndHour: new FormControl(10, [Validators.min(7), Validators.max(22), Validators.required]),
       EndMinute: new FormControl(45, [Validators.min(0), Validators.max(59), Validators.required]),
 
     });

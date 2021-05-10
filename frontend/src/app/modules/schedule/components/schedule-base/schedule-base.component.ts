@@ -15,6 +15,7 @@ import { Colors, WeekType } from '../../models/constants.model';
 import { CourseType } from 'src/app/modules/courses/models/courses.model';
 import { MatDialog } from '@angular/material/dialog';
 import { SignIntoGroupComponent } from '../sign-into-group/sign-into-group.component';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 @Component({
   selector: 'app-schedule-base',
   templateUrl: './schedule-base.component.html',
@@ -53,7 +54,7 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
   courseTypes = CourseType;
   excludeDays: number[];
 
-  constructor(private scheduleService: ScheduleService, public dialog: MatDialog) {}
+  constructor(private scheduleService: ScheduleService, public dialog: MatDialog,) {}
 
   ngOnInit(): void {
     this.loadGroupsForLoggedUser();

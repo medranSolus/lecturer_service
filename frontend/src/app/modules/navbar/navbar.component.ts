@@ -36,4 +36,8 @@ export class NavbarComponent implements OnInit {
     return this.router.url === url;
   }
 
+  isAdmin() {
+    return this.localStorageService.getUserData().roleTypeID === 0;
+  }
+
 }
