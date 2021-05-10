@@ -11,8 +11,10 @@ import { CustomDateFormatter } from '../../providers/custom-date-formatter.provi
 import { ScheduleService } from '../../services/schedule.service';
 import { Group } from '../../models/group.model';
 import { isEmpty } from 'lodash';
-import { Colors } from '../../models/constants.model';
+import { Colors, WeekType } from '../../models/constants.model';
 import { CourseType } from 'src/app/modules/courses/models/courses.model';
+import { MatDialog } from '@angular/material/dialog';
+import { SignIntoGroupComponent } from '../sign-into-group/sign-into-group.component';
 @Component({
   selector: 'app-schedule-base',
   templateUrl: './schedule-base.component.html',
@@ -26,7 +28,13 @@ import { CourseType } from 'src/app/modules/courses/models/courses.model';
 export class ScheduleBaseComponent implements OnDestroy, OnInit{
 
   @Input()
-  groups: Group[];
+  courseGroups: Group[];
+
+  @Input()
+  excludeWeekends = false;
+
+  @Input()
+  onlySchedule = false;
 
   view: string = 'schedule';
   CalendarView = CalendarView;
@@ -43,15 +51,21 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
   emptyData = false;
 
   courseTypes = CourseType;
+  excludeDays: number[];
 
-  constructor(private scheduleService: ScheduleService) {}
+  constructor(private scheduleService: ScheduleService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadGroupsForLoggedUser();
+    if (this.excludeWeekends) {
+      this.excludeDays = [0, 6];
+    }
   }
 
   ngOnDestroy(): void {
-    this.groups$.unsubscribe();
+    if (this.groups$) {
+      this.groups$.unsubscribe();
+    }
   }
   
   setView(view: string) {
@@ -59,21 +73,19 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
   }
 
   private loadGroupsForLoggedUser() {
-    if(isEmpty(this.groups)) {
       this.groups$ = this.scheduleService.getGroupsAssignedToLoggedUser()
       .subscribe(groups => {
         if (isEmpty(groups)) {
           this.emptyData = true
         }
-        this.mapGroupsToEvents(groups);
-        this.mapGroupsToScheduleEvents(groups);
+        if (isEmpty(this.courseGroups)) {
+          this.mapGroupsToEvents(groups);
+          this.mapGroupsToScheduleEvents(groups);
+        } else {
+          this.mergeLecturerGroupsWithCourseGroups(groups);
+        }
 
       })
-    }
-    else {
-      this.mapGroupsToEvents(this.groups);
-      this.mapGroupsToScheduleEvents(this.groups);
-    }
   }
 
   private mapGroupsToEvents(groups: Group[]) {
@@ -99,7 +111,7 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
         this.events.push({
           start: eventStartDate,
           end: eventEndDate,
-          title: `${group.courseName}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`,
+          title: `${group.courseName}<br> ${group.weekTypeID ? WeekType[group.weekTypeID - 1] : ''} ${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`,
           color: Colors[group.courseTypeID]
         });
         if(weekType !== -1) {
@@ -129,10 +141,67 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
       this.eventsSchedule.push({
         start: eventStartDate,
         end: eventEndDate,
-        title: `${group.courseName}<br>${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`,
+        title: `${group.courseName}<br> ${group.weekTypeID ? WeekType[group.weekTypeID - 1] : ''} ${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`,
         color: Colors[group.courseTypeID]
       });
     })
+  }
+
+  private mergeLecturerGroupsWithCourseGroups(groups: Group[]) {
+    groups.forEach(group => {
+      const startDate = new Date();
+      const dayOfWeek = group.dayID + 1;
+      while(startDate.getDay() !== dayOfWeek) {
+        if(startDate.getDay() > dayOfWeek || startDate.getDay() === 0) {
+          startDate.setDate(startDate.getDate() - 1);
+        } else {
+          startDate.setDate(startDate.getDate() + 1);
+        }
+      }
+      const eventStartDate = new Date(startDate);
+      const eventEndDate = new Date(startDate);;
+      eventStartDate.setHours(group.startHour, group.startMinute);
+      eventEndDate.setHours(group.endHour, group.endMinute);
+
+      this.eventsSchedule.push({
+        start: eventStartDate,
+        end: eventEndDate,
+        title: `${group.id}<br> ${group.weekTypeID ? WeekType[group.weekTypeID - 1] : ''} ${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`,
+        color: Colors[2]
+      });
+    });
+    this.courseGroups.forEach(group => {
+      const repeatedGroup = groups.find(item => item.id === group.id);
+      if (!repeatedGroup) {
+        const startDate = new Date();
+        const dayOfWeek = group.dayID + 1;
+        while(startDate.getDay() !== dayOfWeek) {
+          if(startDate.getDay() > dayOfWeek || startDate.getDay() === 0) {
+            startDate.setDate(startDate.getDate() - 1);
+          } else {
+            startDate.setDate(startDate.getDate() + 1);
+          }
+        }
+        const eventStartDate = new Date(startDate);
+        const eventEndDate = new Date(startDate);;
+        eventStartDate.setHours(group.startHour, group.startMinute);
+        eventEndDate.setHours(group.endHour, group.endMinute);
+
+        this.eventsSchedule.push({
+          id: group.id,
+          start: eventStartDate,
+          end: eventEndDate,
+          title: `${group.id}<br>${group.weekTypeID ? WeekType[group.weekTypeID - 1] : ''} ${eventStartDate.getHours()}:${eventStartDate.getMinutes() < 10 ? '0' + eventStartDate.getMinutes() : eventStartDate.getMinutes()} - ${eventEndDate.getHours()}:${eventEndDate.getMinutes()}<br>${group.room}  ${group.building}`,
+          color: Colors[1]
+        });
+      }
+    });
+  }
+
+  signIntoGroup(event) {
+    if (event.event.id) {
+      const dialogRef = this.dialog.open(SignIntoGroupComponent, { disableClose: true, data: {groupID: event.event.id} });
+    }
   }
 
 }

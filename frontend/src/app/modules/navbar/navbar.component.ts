@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 
@@ -9,7 +10,8 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 export class NavbarComponent implements OnInit {
 
   constructor(private authService: AuthService,
-              private localStorageService: LocalStorageService) { }
+              private localStorageService: LocalStorageService,
+              private router: Router) { }
 
   ngOnInit(): void {
     
@@ -28,6 +30,10 @@ export class NavbarComponent implements OnInit {
 
   isUserLoggedIn(): boolean {
     return this.authService.isUserLogedIn();
+  }
+
+  isCurrentRoute(url: string) {
+    return this.router.url === url;
   }
 
 }

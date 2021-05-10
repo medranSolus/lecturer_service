@@ -1,0 +1,14 @@
+<div>
+    <div class="header">
+      <h3>Zaakceptuj prowadzącego</h3>
+      <div class="close" (click)="exit()"></div>
+    </div>
+    
+    <div  mat-dialog-content>
+      Czy jesteś pewien, że chcesz akceptować zgłoszenie do prowadzenia grupy?
+    </div>
+    <div class="alert alert-danger" *ngIf="signError">
+        Akceptacja nie powiodła się
+    </div>
+    <button class="btn btn-outline-primary mt-2" (click)="signIn()">Tak</button>
+</div>

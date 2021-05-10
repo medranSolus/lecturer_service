@@ -12,10 +12,11 @@ import { registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
 import { ScheduleGroupPickerComponent } from './components/schedule-group-picker/schedule-group-picker.component';
 import { ScheduleMainComponent } from './components/schedule-main/schedule-main.component';
+import { SignIntoGroupComponent } from './components/sign-into-group/sign-into-group.component';
 
 registerLocaleData(localePl);
 @NgModule({
-  declarations: [ScheduleBaseComponent, ScheduleGroupPickerComponent, ScheduleMainComponent],
+  declarations: [ScheduleBaseComponent, ScheduleGroupPickerComponent, ScheduleMainComponent, SignIntoGroupComponent],
   imports: [
     CommonModule,
     ScheduleRoutingModule,

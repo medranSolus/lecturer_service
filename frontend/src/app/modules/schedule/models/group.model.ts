@@ -54,4 +54,8 @@ export class Group {
 
     @deserialize
     courseTypeID: number
+
+    lecturerName?: string
+
+    lecturerSurname?: string
 }

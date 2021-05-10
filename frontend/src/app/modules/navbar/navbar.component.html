@@ -1,14 +1,15 @@
 <div *ngIf="isUserLoggedIn()" class="navbar">
     <div class="navbar-item item-left"></div>
     <div class="navbar-links">
-        <a routerLink="/schedule" class="navbar-item link-item" >Twój plan</a> 
-        <a routerLink="/courses" class="navbar-item link-item" >Lista kursów</a> 
-        <a routerLink="/lecturers" class="navbar-item link-item" >Lista prowadzących</a> 
+        <a routerLink="/schedule" [ngClass]="{'active-link': isCurrentRoute('/schedule')}" class="navbar-item link-item" >Twój plan</a> 
+        <a routerLink="/courses" [ngClass]="{'active-link': isCurrentRoute('/courses')}" class="navbar-item link-item" >Lista kursów</a> 
+        <a routerLink="/lecturers" [ngClass]="{'active-link': isCurrentRoute('/lecturers')}" class="navbar-item link-item" >Lista prowadzących</a>
+        <a routerLink="/groups" [ngClass]="{'active-link': isCurrentRoute('/groups')}" class="navbar-item link-item" >Grupy</a> 
     </div> 
     <div class="navbar-item item-right">
         <a routerLink="/account" class="user-item">
             <div class="account"><mat-icon >account_box</mat-icon> </div>
-            <div class="link-item"> {{getUserName()}} </div>
+            <div class="link-item" [ngClass]="{'active-link': isCurrentRoute('/account')}"> {{getUserName()}} </div>
         </a> 
         <a (click)="logout()" class="user-item link-item"> Logout </a>
     </div>  

@@ -20,7 +20,8 @@ export class CoursesItemComponent implements OnInit {
 
   isOpened = false;
 
-  constructor(private lecturerService: LecturerService) { }
+  constructor(
+    private lecturerService: LecturerService) { }
 
   ngOnInit(): void {
     this.filteredData = this.data.courses;

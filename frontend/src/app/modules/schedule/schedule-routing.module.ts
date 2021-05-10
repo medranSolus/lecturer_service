@@ -11,7 +11,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'schedule/pick-group', component: ScheduleGroupPickerComponent,
+    path: 'groups/:courseID', component: ScheduleGroupPickerComponent,
     canActivate: [AuthGuard]
   }
 ];

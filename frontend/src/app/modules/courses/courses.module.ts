@@ -8,10 +8,12 @@ import { CoursesItemComponent } from './components/courses-item/courses-item.com
 import { CourseCreateComponent } from './components/course-create/course-create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { GroupsToAcceptComponent } from './components/groups-to-accept/groups-to-accept.component';
+import { AcceptLecturerComponent } from './components/accept-lecturer/accept-lecturer.component';
 
 
 @NgModule({
-  declarations: [CoursesListComponent, CoursesItemComponent, CourseCreateComponent],
+  declarations: [CoursesListComponent, CoursesItemComponent, CourseCreateComponent, GroupsToAcceptComponent, AcceptLecturerComponent],
   imports: [
     CommonModule,
     CoursesRoutingModule,

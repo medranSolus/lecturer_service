@@ -1,4 +1,5 @@
-import { deserialize, serialize } from "cerialize";
+import { deserialize, deserializeAs, serialize } from "cerialize";
+import { Group } from "../../schedule/models/group.model";
 
 export const Departments = [
     'Wydział Architektury',
@@ -79,3 +80,22 @@ export const LanguageType = [
     'Angielski',
     'Niemiecki'
 ]
+
+export class GroupRequest {
+    
+    @deserialize
+    id: string
+
+    @deserializeAs(Group)
+    group: Group
+}
+
+export class GroupsByID {
+    id: string;
+    groups: GroupRequest[];
+
+    constructor(id, group) {
+        this.id = id;
+        this.groups = [group];
+    }
+}

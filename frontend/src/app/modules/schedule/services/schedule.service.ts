@@ -19,5 +19,13 @@ export class ScheduleService {
     return this.http.get<Group[]>(this.baseURL + 'lecturer');
   }
 
+  getGroupsAssignedtoCourse(id: string): Observable<Group[]> {
+    return this.http.get<Group[]>(this.baseURL + 'course/' + id)
+  }
+
+  requestAssignmentToGroup(id: string) {
+    return this.http.post(this.baseURL + id, {})
+  }
+
   constructor(private http: HttpClient) { }
 }

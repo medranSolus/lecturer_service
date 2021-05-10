@@ -24,3 +24,8 @@ export const Colors = [
         secondary: '#f5dcc0'
     }
 ]
+
+export const WeekType = [
+    'TP',
+    'TN'
+]

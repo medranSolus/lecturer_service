@@ -37,7 +37,7 @@ export class ChangePasswordComponent implements OnInit {
         ID: user.id,
         Pass: this.form.controls['password'].value
       }
-      this.accountService.updateLecturerData(JSON.stringify(this.form.getRawValue()))
+      this.accountService.updateLecturerPassword(JSON.stringify(body))
       .pipe(first())
       .subscribe(
         response => {

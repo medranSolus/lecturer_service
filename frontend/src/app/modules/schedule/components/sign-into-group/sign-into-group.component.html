@@ -1,0 +1,15 @@
+<div >
+
+    <div class="header">
+      <h3>Zgłoś chęć prowadzenia grupy</h3>
+      <div class="close" (click)="exit()"></div>
+    </div>
+    
+    <div  mat-dialog-content>
+      Czy jesteś pewien, że chcesz prowadzić wybraną grupę?
+    </div>
+    <div class="alert alert-danger" *ngIf="signError">
+        Zgłoszenie chęci do prowadzenia nie powiodło się
+    </div>
+    <button class="btn btn-outline-primary mt-2" (click)="signIn()">Tak</button>
+</div>

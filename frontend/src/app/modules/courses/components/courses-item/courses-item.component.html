@@ -37,11 +37,10 @@
             </thead>
             <tbody>
               <ng-container *ngFor="let course of filteredData">
-                <tr>
+                <tr [routerLink]="['/groups', course.id]">
                   <td>{{course.id}}</td>
                   <td>{{course.name}}</td>
                   <td>{{getCourseType(course)}}</td>
-                  <!-- <td>{{course.courseType}}</td> -->
                 </tr>
               </ng-container>
             </tbody>
