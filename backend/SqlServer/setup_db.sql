@@ -51,11 +51,6 @@ VALUES
     (0, 'Admin'),
     (1, 'Normal');
 
-INSERT INTO Semester (Type, Name)
-VALUES
-    (0, 'Winter'),
-    (1, 'Summer');
-
 INSERT INTO WeekType (Type, Name)
 VALUES
     (0, 'All'),
@@ -64,6 +59,13 @@ VALUES
 GO
 
 -- Example data
+INSERT INTO Semesters (ID, IsWinter, StartYear, StartMonth, StartDay, EndYear, EndMonth, EndDay)
+VALUES
+    ('Zimowy 2020/2021', 1, 2020, 9, 2, 2021, 2, 2),
+    ('Letni 2020/2021', 0, 2021, 3, 1, 2021, 6, 22),
+    ('Zimowy 2021/2022', 1, 2021, 9, 1, 2022, 2, 4);
+GO
+
 INSERT INTO Lecturers (ID, Name, Surname, Mail, RoleTypeID, Phone, Title)
 VALUES
     ('jb2137', 'Kazik', 'Nergal', 'jb@op.pl', 0, '696 420 366', 'pOTĘŻNY Decymator'),
@@ -79,12 +81,12 @@ GO
 
 INSERT INTO Courses
     (ID, Accepted, Name, DepartmentID, TypeID, LanguageTypeID, Ects,
-    HoursUniversity, HoursStudent, SemesterTypeID, Year, LecturerID, CourseGroup)
+    HoursUniversity, HoursStudent, SemesterID, Year, LecturerID, CourseGroup)
 VALUES
     ('INEU15003P', 1, 'Zastosowanie informatyki w medycynie', 3, 4, 0, 3,
-    15, 70, 1, 2021, 'jb2137', 'INEU15003Wsp'),
+    15, 70, 'Letni 2020/2021', 2021, 'jb2137', 'INEU15003Wsp'),
     ('INEU17002P', 0, 'Zastosowanie informatyki w gospodarce', 3, 4, 0, 2,
-    15, 70, 1, 2021, 'dziekanat', 'INEU17002Wp');
+    15, 70, 'Letni 2020/2021', 2021, 'dziekanat', 'INEU17002Wp');
 GO
 INSERT INTO Groups
     (ID, CourseID, StudentsCount, Room, Building, WeekTypeID, StartMonth, StartDay,

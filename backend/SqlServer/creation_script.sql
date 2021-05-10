@@ -38,10 +38,16 @@ CREATE TABLE [Role] (
 GO
 
 
-CREATE TABLE [Semester] (
-    [Type] tinyint NOT NULL,
-    [Name] nvarchar(max) NOT NULL,
-    CONSTRAINT [PK_Semester] PRIMARY KEY ([Type])
+CREATE TABLE [Semesters] (
+    [ID] nvarchar(450) NOT NULL,
+    [IsWinter] bit NOT NULL,
+    [StartYear] bigint NOT NULL,
+    [StartMonth] tinyint NOT NULL,
+    [StartDay] tinyint NOT NULL,
+    [EndYear] bigint NOT NULL,
+    [EndMonth] tinyint NOT NULL,
+    [EndDay] tinyint NOT NULL,
+    CONSTRAINT [PK_Semesters] PRIMARY KEY ([ID])
 );
 GO
 
@@ -78,7 +84,7 @@ CREATE TABLE [Courses] (
     [Ects] tinyint NOT NULL,
     [HoursUniversity] tinyint NOT NULL,
     [HoursStudent] tinyint NOT NULL,
-    [SemesterTypeID] tinyint NOT NULL,
+    [SemesterID] nvarchar(450) NOT NULL,
     [Year] bigint NOT NULL,
     [LecturerID] nvarchar(450) NULL,
     [CourseGroup] nvarchar(max) NULL,
@@ -87,7 +93,7 @@ CREATE TABLE [Courses] (
     CONSTRAINT [FK_Courses_Department_DepartmentID] FOREIGN KEY ([DepartmentID]) REFERENCES [Department] ([Type]) ON DELETE CASCADE,
     CONSTRAINT [FK_Courses_Lang_LanguageTypeID] FOREIGN KEY ([LanguageTypeID]) REFERENCES [Lang] ([Type]) ON DELETE CASCADE,
     CONSTRAINT [FK_Courses_Lecturers_LecturerID] FOREIGN KEY ([LecturerID]) REFERENCES [Lecturers] ([ID]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_Courses_Semester_SemesterTypeID] FOREIGN KEY ([SemesterTypeID]) REFERENCES [Semester] ([Type]) ON DELETE CASCADE
+    CONSTRAINT [FK_Courses_Semesters_SemesterID] FOREIGN KEY ([SemesterID]) REFERENCES [Semesters] ([ID]) ON DELETE CASCADE
 );
 GO
 
@@ -159,7 +165,7 @@ CREATE INDEX [IX_Courses_LecturerID] ON [Courses] ([LecturerID]);
 GO
 
 
-CREATE INDEX [IX_Courses_SemesterTypeID] ON [Courses] ([SemesterTypeID]);
+CREATE INDEX [IX_Courses_SemesterID] ON [Courses] ([SemesterID]);
 GO
 
 
