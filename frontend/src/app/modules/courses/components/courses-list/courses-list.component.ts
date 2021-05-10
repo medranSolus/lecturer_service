@@ -5,6 +5,7 @@ import { CoursesService } from '../../services/courses.service';
 import { isEmpty } from 'lodash'
 import { MatDialog } from '@angular/material/dialog';
 import { CourseCreateComponent } from '../course-create/course-create.component';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-courses-list',
@@ -27,6 +28,17 @@ export class CoursesListComponent implements OnInit, OnDestroy {
 
   public createNewCourse() {
     const dialogRef = this.dialog.open(CourseCreateComponent, { disableClose: true });
+    dialogRef.afterClosed()
+    .pipe(first())
+    .subscribe(result => {
+      if(result) {
+        if(this.courses$) {
+          this.courses$.unsubscribe();
+        }
+        this.courseList = [];
+        this.getAllCourses();
+      }
+    })
   }
 
   private getAllCourses() {

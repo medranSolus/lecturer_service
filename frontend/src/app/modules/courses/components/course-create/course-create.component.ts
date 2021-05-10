@@ -61,7 +61,7 @@ export class CourseCreateComponent implements OnInit {
       .pipe(first())
       .subscribe(response => {
         this.spinner.hide();
-        this.dialogRef.close({});
+        this.dialogRef.close({success: true});
       })
     }
   }
