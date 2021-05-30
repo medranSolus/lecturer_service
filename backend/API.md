@@ -1,0 +1,166 @@
+## Lecturer Service API reference
+
+**Listening port:** 4200
+
+Authentication method based on JWT passed in header named **Authorization: Bearer token**. 
+
+### GET
+  - *lecturer* - get all lecturers
+    - return:
+      - OK 200: [ Data.Lecturer ]
+  - *lecturer/LECTURER_ID* - get single lecturer
+    - return:
+      - OK 200: Data.Lecturer
+      - NotFound 404: LECTURER_ID not found
+  - *lecturer/notify* - get courses to approve (admin only)
+    - return:
+      - OK 200: [ Data.CourseMsgInfo ]
+      - Unauthorized 401: user not an admin
+  - *lecturer/notify/LECTURER_ID* - get requests to sign into lecturer course groups
+    - return:
+      - OK 200: [ Data.GroupMsgInfo ]
+      - Unauthorized 401: user ID and LECTURER_ID missmatched or user not found
+  - *course* - get all courses
+    - return:
+      - OK 200: [ Data.CourseShort ]
+  - *course/COURSE_ID* - get single course
+    - return:
+      - OK 200: Data.Course
+      - NotFound 404: COURSE_ID not found
+  - *group* - get all groups
+    - return:
+      - OK 200: [ Data.Group ]
+  - *group/GROUP_ID* - get single group
+    - return:
+      - OK 200: Data.Group
+      - NotFound 404: GROUP_ID not found
+  - *group/lecturer* - get all groups of current logged lecturer
+    - return:
+      - OK 200: [ Data.Group ]
+      - Unauthorized 401: user not found
+  - *group/course/COURSE_ID* - get all groups associated with course
+    - return:
+      - OK 200: [ Data.Group ]
+  - *semester* - get all semester IDs
+    - return:
+      - OK 200: [ string ]
+  - *semester/SEMESTER_ID* - get single semester
+    - return:
+      - OK 200: [ Model.Semester ]
+      - NotFound 404: SEMESTER_ID not found
+
+### POST
+  - *login* - generate JWT token (JWT not required)
+    - body: Data.User
+    - return:
+      - OK 200: { token }
+      - Unauthorized 401: user not found or password mismatch
+  - *lecturer/PASSWORD* - add new lecturer (admin only)
+    - body: Data.Lecturer
+    - return:
+      - OK 200: lecturer added
+      - Unauthorized 401: user not an admin
+      - BadRequest 400: PASSWORD is null or empty
+      - Conflict 409: lecturer already exists
+  - *course* - add new course (if not admin then it's pending course)
+    - body: Data.Course
+    - return:
+      - OK 200: course added
+      - Unauthorized 401: user don't exist
+      - Conflict 409: course already exists
+  - *course/batch* - add new courses (admin only)
+    - body: [ Data.Course ]
+    - return:
+      - OK 200: all courses added
+      - Unauthorized 401: user not an admin
+      - Conflict 409: [ int ] some courses already exists, with rows returned
+  - *course/accept* - accept pending course (admin only)
+    - body: Data.CourseMsg
+    - return:
+      - OK 200: course accepted
+      - Unauthorized 401: user not an admin
+      - NotFound 404: course not found
+  - *course/COURSE_ID* - send pending course for acceptation
+    - return:
+      - OK 200: pending course added
+      - BadRequest 400: course already accepted
+      - Unauthorized 401: user don't exist or user is not an owner of a course (must be admin otherwise)
+      - NotFound 404: pending course not found
+  - *group* - add new group
+    - body: Data.Group
+    - return:
+      - OK 200: group added
+      - BadRequest 400: group course not found
+      - Unauthorized 401: user is not an owner of a course or admin
+      - Conflict 409: group already exists
+  - *group/batch* - add new groups (admin only)
+    - body: [ Data.Group ]
+    - return:
+      - OK 200: all groups added
+      - Unauthorized 401: user not an admin
+      - Conflict 409: [ { int, bool } ] some courses already exists or error occured (CourseID was not found), with rows returned and state of error (true)
+  - *group/accept* - accept request for signing into course group
+    - body: Data.GroupMsg
+    - return:
+      - OK 200: request accepted
+      - Unauthorized 401: user don't exist or user is not an owner of a  group course (must be admin otherwise)
+      - NotFound 404: group not found
+  - *group/GROUP_ID* - create request for signing into course group
+    - return:
+      - OK 200: request added
+      - Unauthorized 401: user don't exist
+      - NotFound 404: group not found
+  - *semester* - add new semester (admin only)
+    - body: Model.Semester
+    - return:
+      - OK 200: semester added
+      - Unauthorized 401: user not an admin
+      - Conflict 409: semester already exists
+
+### PUT
+  - *lecturer* - update lecturer data
+    - body: Data.Lecturer
+    - return:
+      - OK 200: lecturer updated
+      - Unauthorized 401: user ID and lecturer ID in body mismatched or user not found
+  - *lecturer/pass* - update lecturer password
+    - body: Data.Password
+    - return:
+      - OK 200: lecturer password updated
+      - Unauthorized 401: user ID and lecturer ID in body mismatched or user not found
+      - BadRequest 400: password in body is null or empty
+  - *course* - update course data
+    - body: Data.Course
+    - return:
+      - OK 200: course updated
+      - Unauthorized 401: user don't exist or user is not an owner of a course or admin if course is accepted
+      - NotFound 404: course not found
+  - *group* - update group data
+    - body: Data.Group
+    - return:
+      - OK 200: group updated
+      - Unauthorized 401: user don't exist or user is not an owner of a group course (must be admin otherwise)
+      - NotFound 404: group not found
+  - *semester* - update semester data (admin only)
+    - body: Model.Semester
+    - return:
+      - OK 200: semester updated
+      - Unauthorized 401: user not an admin
+      - NotFound 404: semester not found
+
+### DELETE
+  - *lecturer/LECTURER_ID* - delete lecturer (admin only)
+    - return:
+      - OK 200: lecturer deleted
+      - Unauthorized 401: user not an admin
+      - NotFound 404: lecturer not found
+  - *course/COURSE_ID* - delete course
+    - return:
+      - OK 200: course deleted
+      - Unauthorized 401: user is not an owner of a course or admin if course is accepted
+      - NotFound 404: course not found
+  - *group/GROUP_ID* - delete group
+    - return:
+      - OK 200: group deleted
+      - Unauthorized 401: user is not an owner of a course or admin if course is accepted
+      - NotFound 404: group not found
