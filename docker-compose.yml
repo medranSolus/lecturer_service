@@ -8,7 +8,6 @@ networks:
 
 services:
   lecturerservice:
-    name: lecturerservice
     hostname: lecturerservice
     build: backend/LecturerService
     depends_on:
@@ -40,7 +39,6 @@ services:
     ############################
 
   sqlserver:
-    name: sqlserver
     hostname: sqlserver
     build: backend/SqlServer
     ports:
@@ -51,7 +49,6 @@ services:
      - database
 
   webpage:
-    name: webpage
     hostname: webpage
     build: frontend
     depends_on:
