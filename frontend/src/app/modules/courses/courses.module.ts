@@ -10,10 +10,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { GroupsToAcceptComponent } from './components/groups-to-accept/groups-to-accept.component';
 import { AcceptLecturerComponent } from './components/accept-lecturer/accept-lecturer.component';
+import { CourseImportFromFileComponent } from './components/course-import-from-file/course-import-from-file.component';
+import { NgxFileDropModule } from 'ngx-file-drop';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
 
 
 @NgModule({
-  declarations: [CoursesListComponent, CoursesItemComponent, CourseCreateComponent, GroupsToAcceptComponent, AcceptLecturerComponent],
+  declarations: [CoursesListComponent, CoursesItemComponent, CourseCreateComponent, GroupsToAcceptComponent, AcceptLecturerComponent, CourseImportFromFileComponent],
   imports: [
     CommonModule,
     CoursesRoutingModule,
@@ -21,6 +24,8 @@ import { AcceptLecturerComponent } from './components/accept-lecturer/accept-lec
     FormsModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
+    NgxFileDropModule,
+    NgxCsvParserModule
   ]
 })
 export class CoursesModule { }

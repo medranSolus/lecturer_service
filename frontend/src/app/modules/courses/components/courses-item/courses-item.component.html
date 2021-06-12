@@ -11,28 +11,22 @@
               <tr>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="course1" placeholder="ID" (input)="filterByID($event.target.value)">
-                        <label for="course1">ID</label>
+                        <input type="text" class="form-control" placeholder="ID" (input)="filterByID($event.target.value)">
+                        <label>ID</label>
                     </div>
                 </th>
                 <th scope="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="course2" placeholder="Nazwa kursu" (input)="filterByName($event.target.value)">
-                        <label for="course2">Nazwa kursu</label>
+                        <input type="text" class="form-control" placeholder="Nazwa kursu" (input)="filterByName($event.target.value)">
+                        <label>Nazwa kursu</label>
                     </div>
                 </th>
                 <th scope="col">
                   <div class="form-floating">
-                      <input type="text" class="form-control" id="course3" placeholder="Forma zajęć" (input)="filterByType($event.target.value)">
-                      <label for="course3">Forma zajęć</label>
+                      <input type="text" class="form-control" placeholder="Forma zajęć" (input)="filterByType($event.target.value)">
+                      <label>Forma zajęć</label>
                   </div>
                 </th>
-                <!-- <th scope="col">
-                  <div class="form-floating">
-                      <input type="text" class="form-control" id="course4" placeholder="Opiekun kursu">
-                      <label for="course4">Opiekun kursu</label>
-                  </div>
-                </th> -->
               </tr>
             </thead>
             <tbody>

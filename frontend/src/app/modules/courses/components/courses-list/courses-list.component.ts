@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CourseCreateComponent } from '../course-create/course-create.component';
 import { first } from 'rxjs/operators';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { CourseImportFromFileComponent } from '../course-import-from-file/course-import-from-file.component';
 
 @Component({
   selector: 'app-courses-list',
@@ -29,6 +30,21 @@ export class CoursesListComponent implements OnInit, OnDestroy {
 
   public createNewCourse() {
     const dialogRef = this.dialog.open(CourseCreateComponent, { disableClose: true });
+    dialogRef.afterClosed()
+    .pipe(first())
+    .subscribe(result => {
+      if(result) {
+        if(this.courses$) {
+          this.courses$.unsubscribe();
+        }
+        this.courseList = [];
+        this.getAllCourses();
+      }
+    })
+  }
+
+  public loadCourses() {
+    const dialogRef = this.dialog.open(CourseImportFromFileComponent, { disableClose: true });
     dialogRef.afterClosed()
     .pipe(first())
     .subscribe(result => {

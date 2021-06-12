@@ -39,18 +39,6 @@ export class AuthService {
       ));
   }
 
-  // public register(form: FormGroup, URL: string) {
-  //   const body = {
-  //     "email": form.get('email').value,
-  //     "password": form.get('password').value,
-  //     "name": form.get('name').value,
-  //     "surname": form.get('surname').value,
-  //     "nick": form.get('nick').value,
-  //   }
-
-  //   return this.http.post(URL + 'users', body);
-  // }
-
   public loadUserData() {
     const userID = this.storageService.getUserID();
     return this.http.get<Lecturer>(this.baseURL + 'lecturer/' + userID);

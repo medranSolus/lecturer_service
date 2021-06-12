@@ -19,6 +19,10 @@ export class CoursesService {
     return this.http.post<any>(this.baseURL, body);
   }
 
+  addMultipleCourses(body: any): Observable<any> {
+    return this.http.post<any>(this.baseURL + 'batch', body);
+  }
+
   getGroupsToAccept(id: string): Observable<GroupRequest[]> {
     return this.http.get<GroupRequest[]>(environment.baseURL + 'lecturer/notify/' + id)
   }
