@@ -3,9 +3,12 @@ version: "3.9"
 networks:
   database:
     driver: bridge
+  api:
+    driver: bridge
 
 services:
   lecturerservice:
+    hostname: lecturerservice
     build: backend/LecturerService
     depends_on:
       - sqlserver
@@ -27,9 +30,12 @@ services:
     #network_mode: hostServer=sqlserver;
     ##### PRODUCTION!! #####
     ports:
-      - "4200:80"
+      - "4200:4200"
+    expose:
+      - 4200
     networks:
      - database
+     - api
     ############################
 
   sqlserver:
@@ -41,3 +47,15 @@ services:
       - 1433
     networks:
      - database
+
+  webpage:
+    hostname: webpage
+    build: frontend
+    depends_on:
+      - lecturerservice
+    ports:
+      - "80:80"
+    expose:
+      - 80
+    networks:
+     - api
