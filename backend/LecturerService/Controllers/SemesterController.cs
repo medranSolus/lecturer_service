@@ -27,7 +27,7 @@ namespace LecturerService.Controllers
         [HttpGet]
         [Authorize]
         [Route("id")]
-        public IActionResult Get()
+        public IActionResult GetIDs()
         {
             return Ok(dbCtx.Semesters.Select(l => l.ID).ToArray());
         }
