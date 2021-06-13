@@ -27,7 +27,7 @@ services:
     # Server=sqlserver;
     #
     ##### DEV ONLY FIX #####
-    #network_mode: hostServer=sqlserver;
+    #network_mode: host
     ##### PRODUCTION!! #####
     ports:
       - "4200:4200"
