@@ -2,7 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { first } from 'rxjs/operators';
+import { first, tap } from 'rxjs/operators';
+import { Semester } from 'src/app/modules/courses/models/semester.model';
+import { CoursesService } from 'src/app/modules/courses/services/courses.service';
 import { ScheduleService } from '../../services/schedule.service';
 
 export interface DialogData {
@@ -17,15 +19,29 @@ export class CreateGroupComponent implements OnInit {
   form: FormGroup;
   error = false;
   success = false;
+  semesters: Semester[];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public dialogRef: MatDialogRef<CreateGroupComponent>,
     private spinner: NgxSpinnerService,
-    private scheduleService: ScheduleService
+    private scheduleService: ScheduleService,
+    private courseService: CoursesService
   ) { }
 
   ngOnInit(): void {
+    this.spinner.show()
+    this.courseService.getAllSemesters()
+      .pipe(first())
+      .subscribe(semesters => {
+        this.semesters = semesters;
+        this.setupForm(semesters[0]);
+        this.spinner.hide();
+      });
+  }
+
+  setupForm(semester: Semester) {
+    console.log(semester)
     this.form = new FormGroup({
       ID: new FormControl('', Validators.required),
       CourseID:  new FormControl(this.data.courseID),
@@ -33,10 +49,10 @@ export class CreateGroupComponent implements OnInit {
       Room: new FormControl('', Validators.required),
       Building: new FormControl('', Validators.required),
       WeekTypeID: new FormControl(0, Validators.required),
-      StartMonth: new FormControl(3),
-      StartDay: new FormControl(1),
-      EndMonth: new FormControl(6),
-      EndDay: new FormControl(22),
+      StartMonth: new FormControl(semester.startMonth),
+      StartDay: new FormControl(semester.startDay),
+      EndMonth: new FormControl(semester.endMonth),
+      EndDay: new FormControl(semester.endDay),
       DayID: new FormControl(0, Validators.required),
       StartHour: new FormControl(9, [Validators.min(7), Validators.max(21), Validators.required]),
       StartMinute: new FormControl(15, [Validators.min(0), Validators.max(60), Validators.required]),

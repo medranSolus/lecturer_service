@@ -14,6 +14,7 @@ import { ScheduleGroupPickerComponent } from './components/schedule-group-picker
 import { ScheduleMainComponent } from './components/schedule-main/schedule-main.component';
 import { SignIntoGroupComponent } from './components/sign-into-group/sign-into-group.component';
 import { CreateGroupComponent } from './components/create-group/create-group.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 registerLocaleData(localePl);
 @NgModule({
@@ -29,6 +30,7 @@ registerLocaleData(localePl);
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    NgxSpinnerModule
   ],
   exports: [
     ScheduleGroupPickerComponent

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Group } from '../../schedule/models/group.model';
 import { Course, CourseShort, GroupRequest } from '../models/courses.model';
+import { Semester } from '../models/semester.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,14 @@ export class CoursesService {
 
   acceptLecturer(body) {
     return this.http.post(environment.baseURL + 'group/accept', body);
+  }
+
+  getAllSemesters(): Observable<Semester[]> {
+    return this.http.get<Semester[]>(environment.baseURL + 'semester');
+  }
+
+  getSemester(id: string): Observable<Semester> {
+    return this.http.get<Semester>(environment.baseURL + 'semester/' + id);
   }
 
   constructor(private http: HttpClient) { }

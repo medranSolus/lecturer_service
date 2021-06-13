@@ -95,15 +95,16 @@ export class ScheduleBaseComponent implements OnDestroy, OnInit{
       startDate.setMonth(group.startMonth - 1, group.startDay);
       const endDate = new Date();
       endDate.setMonth(group.endMonth, group.endDay);
-      const week = moment(startDate).week() % 2;
       const dayOfWeek = group.dayID + 1;
       const weekType = group.weekTypeID - 1;
       while(startDate.getDay() !== dayOfWeek) {
         startDate.setDate(startDate.getDate() + 1);
       }
+      const week = moment(startDate).week() % 2;
       if (weekType !== -1 && weekType !== week) {
         startDate.setDate(startDate.getDate() + 7);
       }
+      console.log(startDate)
       while(startDate.getTime() <= endDate.getTime()) {
         const eventStartDate = new Date(startDate);
         const eventEndDate = new Date(startDate);

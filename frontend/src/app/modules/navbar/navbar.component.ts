@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
   }
 
   isAdmin() {
-    return this.localStorageService.getUserData().roleTypeID === 0;
+    return this.localStorageService.getUserData()?.roleTypeID === 0;
   }
 
 }

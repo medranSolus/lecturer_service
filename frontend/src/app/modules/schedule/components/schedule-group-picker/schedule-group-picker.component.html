@@ -5,7 +5,7 @@
     </div>
     
     <h4>Kliknij interesującą cię grupę na planie, aby zgłosić chęć prowadzenia</h4>
-    <app-schedule-base *ngIf="groups.length; else noData" [onlySchedule]="true" [courseGroups]="groups" class="mt-3"></app-schedule-base>
+    <app-schedule-base *ngIf="groups?.length; else noData" [onlySchedule]="true" [courseGroups]="groups" class="mt-3"></app-schedule-base>
 </div>
 
 <ng-template #noData>

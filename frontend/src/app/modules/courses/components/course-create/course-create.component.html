@@ -5,7 +5,7 @@
       <div class="close" (click)="exit()"></div>
     </div>
     
-    <form [formGroup]="form" mat-dialog-content>
+    <form *ngIf="isLoaded()" [formGroup]="form" mat-dialog-content>
       <div class="mb-2">
         <label id="name">Nazwa kursu:</label> 
         <input type='text' class="form-control" [ngClass]="{'is-invalid': isInvalid(form.controls['Name'])}" aria-describedby="name" [formControl]="form.controls['Name']">
@@ -46,9 +46,8 @@
       </div>
       <div class="mb-2">
         <label id="semester">Semestr:</label>
-        <select class="form-select" aria-describedby="semester" [formControl]="form.controls['SemesterTypeID']">
-          <option [ngValue]=0>Zimowy</option>
-          <option [ngValue]=1>Letni</option>
+        <select class="form-select" aria-describedby="semester" [formControl]="form.controls['SemesterID']">
+          <option *ngFor="let semester of semesters" [ngValue]="semester.id">{{semester.id}}</option>
         </select>
       </div>
       <div class="mb-2">
@@ -66,3 +65,5 @@
     </form>
     <button class="btn btn-outline-primary mt-2" (click)="create()">Zapisz</button>
 </div>
+
+<ngx-spinner></ngx-spinner>

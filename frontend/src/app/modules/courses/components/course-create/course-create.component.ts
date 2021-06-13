@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Serialize } from 'cerialize';
@@ -7,6 +7,7 @@ import { first } from 'rxjs/operators';
 import { Lecturer } from 'src/app/modules/lecturers/models/lecturer.model';
 import { LecturerService } from 'src/app/modules/lecturers/services/lecturer.service';
 import { Course, CourseType, Departments, LanguageType } from '../../models/courses.model';
+import { Semester } from '../../models/semester.model';
 import { CoursesService } from '../../services/courses.service';
 
 @Component({
@@ -25,7 +26,7 @@ export class CourseCreateComponent implements OnInit {
     Ects: new FormControl(0, Validators.required),
     HoursUniversity: new FormControl(0, Validators.required),
     HoursStudent: new FormControl(0, Validators.required),
-    SemesterTypeID: new FormControl(0, Validators.required),
+    SemesterID: new FormControl('', Validators.required),
     Year: new FormControl(2021, Validators.required),
     LecturerID: new FormControl('', Validators.required)
   });
@@ -34,7 +35,8 @@ export class CourseCreateComponent implements OnInit {
   courseType = CourseType;
   language = LanguageType;
   lecturers: Lecturer[];
-
+  semesters: Semester[];
+    
   constructor(
     public dialogRef: MatDialogRef<CourseCreateComponent>, 
     private courseService: CoursesService, 
@@ -42,10 +44,16 @@ export class CourseCreateComponent implements OnInit {
     private spinner: NgxSpinnerService,) { }
 
   ngOnInit(): void {
+    this.spinner.show()
     this.lecturerService.getAllLecturers()
     .pipe(first())
     .subscribe(lecturers => {
       this.lecturers = lecturers;
+    });
+    this.courseService.getAllSemesters()
+    .pipe(first())
+    .subscribe(semesters => {
+      this.semesters = semesters;
     })
   }
 
@@ -68,6 +76,14 @@ export class CourseCreateComponent implements OnInit {
 
   isInvalid(control: AbstractControl) {
     return control.invalid && control.touched;
+  }
+
+  isLoaded(): boolean {
+    if (this.lecturers && this.semesters) {   
+      this.spinner.hide();
+      return true;
+    }
+    return false;
   }
 
 }
