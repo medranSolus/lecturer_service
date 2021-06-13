@@ -41,7 +41,10 @@ Authentication method based on JWT passed in header named **Authorization: Beare
   - *group/course/COURSE_ID* - get all groups associated with course
     - return:
       - OK 200: [ Data.Group ]
-  - *semester* - get all semester IDs
+  - *semester* - get all semesters
+    - return:
+      - OK 200: [ Model.Semester ]
+  - *semester/id* - get all semester IDs
     - return:
       - OK 200: [ string ]
   - *semester/SEMESTER_ID* - get single semester
